@@ -35,8 +35,8 @@ window.SITE = {
       ]
     },
     hobbies: {
-      zh: "创作之外，我喜欢听音乐、追星、旅行和摄影，有时也会跳舞，也尝试过 cosplay。看喜欢的舞台、四处走走、拍下一个有意思的瞬间，或者跟着音乐动一动，都能让我开心一阵子。",
-      en: "Outside my creative work, I enjoy music, following my favourite artists, travelling, and photography. I dance sometimes, too. I’ve also tried cosplay. A live show, a little wandering, an interesting moment caught on camera, or moving to a song can make my day."
+      zh: "创作之外，我喜欢听音乐、追星、旅行、摄影和养小动物，有时也会跳舞，也尝试过 cosplay。看喜欢的舞台、四处走走、拍下一个有意思的瞬间，或者跟着音乐动一动，都能让我开心一阵子。",
+      en: "Outside my creative work, I enjoy music, following my favourite artists, travelling, photography, and caring for little animals. I dance sometimes, too. I’ve also tried cosplay. A live show, a little wandering, an interesting moment caught on camera, or moving to a song can make my day."
     },
     footer: { zh: "谢谢你来逛逛。", en: "Thanks for stopping by." }
   },
