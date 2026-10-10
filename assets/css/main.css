@@ -69,36 +69,26 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* --------------------------------------------------------------------------
    自定义光标
    -------------------------------------------------------------------------- */
-body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; }
-
-.cursor-dot, .cursor-ring {
-  position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: normal;
+/* Native PNG cursors use image-specific hotspots; no trailing dot or ring. */
+body.has-cursor { cursor: var(--cursor-arrow, auto); }
+body.has-cursor a, body.has-cursor button, body.has-cursor [role="button"],
+body.has-cursor [data-cursor="tape"], body.has-cursor [data-cursor="zoom"],
+body.has-cursor .video-progress { cursor: var(--cursor-pointer, pointer); }
+body.has-cursor .video-play:not(.is-playing), body.has-cursor [data-cursor="play"] {
+  cursor: var(--cursor-play, pointer);
 }
-.cursor-dot  { width: 6px;  height: 6px;  background: var(--black); }
-.cursor-ring {
-  width: 34px; height: 34px;
-  border: 1.5px solid var(--black);
-  transition: width .25s var(--ease), height .25s var(--ease),
-              border-color .25s, background-color .25s;
-  display: grid; place-items: center;
+/* Keep the existing OPEN / View image hints as text beside the native pointer. */
+.cursor-glyph {
+  position: fixed; z-index: 9999; pointer-events: none;
+  padding: 5px 8px; border-radius: 4px; background: var(--purple); color: var(--cream);
+  font-size: 11px; font-weight: 700; white-space: nowrap;
 }
-.cursor-ring .cursor-glyph {
-  font-size: 11px; font-weight: 700; letter-spacing: .04em;
-  color: var(--cream); opacity: 0; transition: opacity .2s;
-  text-transform: uppercase; white-space: nowrap;
-}
-body.cursor-link .cursor-ring { width: 46px; height: 46px; border-color: var(--purple); }
-body.cursor-tape .cursor-ring {
-  width: 64px; height: 64px; background: var(--purple); border-color: var(--purple);
-}
-body.cursor-tape .cursor-ring .cursor-glyph { opacity: 1; }
-body.cursor-tape .cursor-dot { opacity: 0; }
-@media (hover: none), (pointer: coarse) {
-  .cursor-dot, .cursor-ring { display: none; }
-  body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: auto; }
+.cursor-glyph[hidden] { display: none; }
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor-glyph { display: none; }
+  body.has-cursor { cursor: auto; }
+  body.has-cursor a, body.has-cursor button, body.has-cursor [role="button"],
+  body.has-cursor [data-cursor], body.has-cursor .video-progress { cursor: pointer; }
 }
 
 /* --------------------------------------------------------------------------
@@ -458,8 +448,7 @@ body.viewer-open { overflow: hidden; }
 body.has-cursor .lightbox, body.has-cursor .lightbox img { cursor: auto; }
 body.has-cursor .lightbox .lb-stage { cursor: zoom-in; }
 body.has-cursor .lightbox .lb-stage.is-zoomed, body.has-cursor .lightbox .lb-stage.is-zoomed img { cursor: grab; }
-body.has-cursor .lightbox button { cursor: pointer; }
-body.cursor-zoom .cursor-ring { width: 96px; height: 64px; }
+body.has-cursor .lightbox button { cursor: var(--cursor-pointer, pointer); }
 button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--purple); outline-offset: 3px; }
 
 /* --------------------------------------------------------------------------
@@ -531,10 +520,12 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 /* 贴纸允许溢出照片边缘，但不能把整页撑出横向滚动条 */
 .page-about { overflow-x: clip; }
 .about-photo { position: relative; }
+.about-photo-stage { position: relative; }
 .about-photo .photo-frame { position: relative; border-radius: 8px; overflow: hidden; background: var(--cream-2); }
 .about-photo .photo-frame img { width: 100%; height: auto; }
-.about-sticker { position: absolute; z-index: 5; touch-action: none; }
-.about-sticker img, .about-sticker svg { width: 100%; height: auto; pointer-events: none; }
+.about-sticker { position: absolute; z-index: 5; touch-action: none; cursor: grab; user-select: none; }
+.about-sticker:active { cursor: grabbing; }
+.about-sticker img, .about-sticker svg { width: 100%; height: auto; pointer-events: none; background: transparent; }
 .about-quote {
   margin: 4vh 0 2vh;
   font-style: italic; font-weight: 600;
@@ -568,7 +559,7 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 .contact-row .copied-flag { font-size: 13px; font-style: italic; color: var(--yellow); opacity: 0; transition: opacity .25s; }
 .contact-row .copied-flag.is-show { opacity: 1; }
 
-.contact-spin { position: absolute; top: 8vh; right: 6vw; width: 13vw; min-width: 110px; }
+.contact-spin { position: absolute; top: 8vh; right: 6vw; width: clamp(90px, 9vw, 130px); pointer-events: none; }
 .contact-spin img, .contact-spin svg { width: 100%; height: auto; animation: spin 14s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -633,6 +624,11 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
   .lightbox button { padding: 8px; font-size: 12px; }
   .lb-footer { padding: 8px; }
   .about-grid { grid-template-columns: 1fr; }
+  .sticker-desktop, .contact-spin { display: none; }
   .menu-nav { padding-left: 14vw; }
   .contact-wordmark { font-size: 12vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-spin img { animation: none; }
 }

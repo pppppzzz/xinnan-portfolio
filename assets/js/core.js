@@ -52,35 +52,45 @@
 
   /* ---------------- 自定义光标 ---------------- */
   function buildCursor() {
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    document.body.classList.add("has-cursor");
-    var dot = document.createElement("div"); dot.className = "cursor-dot";
-    var ring = document.createElement("div"); ring.className = "cursor-ring";
-    var glyph = document.createElement("span"); glyph.className = "cursor-glyph";
-    ring.appendChild(glyph);
-    document.body.appendChild(dot); document.body.appendChild(ring);
-
-    var x = innerWidth / 2, y = innerHeight / 2, rx = x, ry = y;
-    addEventListener("mousemove", function (e) { x = e.clientX; y = e.clientY;
-      dot.style.transform = "translate(" + (x - 3) + "px," + (y - 3) + "px)"; }, { passive: true });
-
-    (function loop() {
-      rx += (x - rx) * 0.18; ry += (y - ry) * 0.18;
-      ring.style.transform = "translate(" + (rx - ring.offsetWidth / 2) + "px," + (ry - ring.offsetHeight / 2) + "px)";
-      requestAnimationFrame(loop);
-    })();
+    var cfg = window.DECORATIONS.cursors;
+    if (!cfg) return;
+    Object.keys(cfg).forEach(function (key) {
+      var c = cfg[key];
+      // Custom-property URLs resolve at the consuming stylesheet, not this inline style.
+      var src = new URL(c.src, document.baseURI).href;
+      document.body.style.setProperty("--cursor-" + key,
+        'url("' + src + '") ' + c.hotspot.join(" ") + ", " + c.fallback);
+    });
+    var fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var glyph = document.createElement("span");
+    glyph.className = "cursor-glyph"; glyph.hidden = true;
+    glyph.setAttribute("aria-hidden", "true");
+    document.body.appendChild(glyph);
+    var x = 0, y = 0, enabled = false;
 
     function paintCursor(target) {
-      var hint = target && target.closest("[data-cursor]");
+      var hint = enabled && target && !target.closest(".lightbox") && target.closest("[data-cursor]");
       var labelled = hint && (hint.dataset.cursor === "tape" || hint.dataset.cursor === "zoom");
-      var link = target && target.closest("a,button,[role='button'],[data-cursor='link']");
-      document.body.classList.toggle("cursor-tape", !!labelled);
-      document.body.classList.toggle("cursor-zoom", !!hint && hint.dataset.cursor === "zoom");
-      document.body.classList.toggle("cursor-link", !labelled && !!link);
       glyph.textContent = labelled ? (hint.getAttribute("data-cursor-label") || "") : "";
+      glyph.hidden = !glyph.textContent;
+      glyph.style.left = Math.min(x + 24, innerWidth - glyph.offsetWidth - 8) + "px";
+      glyph.style.top = Math.min(y + 22, innerHeight - glyph.offsetHeight - 8) + "px";
     }
     APP.refreshCursor = function () { paintCursor(document.elementFromPoint(x, y)); };
+    function syncCursor() {
+      enabled = fine.matches && !reduced.matches;
+      document.body.classList.toggle("has-cursor", enabled);
+      APP.refreshCursor();
+    }
+    syncCursor();
+    fine.addEventListener("change", syncCursor); reduced.addEventListener("change", syncCursor);
+    document.addEventListener("mousemove", function (e) {
+      x = e.clientX; y = e.clientY; paintCursor(e.target);
+    }, { passive: true });
     document.addEventListener("mouseover", function (e) { paintCursor(e.target); });
+    document.documentElement.addEventListener("mouseleave", function () { glyph.hidden = true; });
+    addEventListener("blur", function () { glyph.hidden = true; });
     APP.onLang(function () { requestAnimationFrame(APP.refreshCursor); });
   }
 
@@ -130,7 +140,7 @@
     }).join("");
     var stickers = (window.DECORATIONS.menu || []).map(function (s) {
       var pos = Object.keys(s.pos).map(function (k) { return k + ":" + s.pos[k]; }).join(";");
-      return '<div class="menu-sticker" data-rot="' + (s.rotate || 0) + '" style="' + pos + ';width:' + s.width + '">' +
+      return '<div class="menu-sticker' + (s.compact === false ? ' sticker-desktop' : '') + '" data-rot="' + (s.rotate || 0) + '" style="' + pos + ';width:' + s.width + '">' +
              '<img src="' + s.src + '" alt=""></div>';
     }).join("");
 
@@ -260,6 +270,7 @@
         (audio.paused ? APP.t("bgmPlay") : APP.t("bgmPause")) +
         (cfg.title && APP.L(cfg.title) ? " · " + APP.L(cfg.title) : "");
       btn.title = (cfg.credit && APP.L(cfg.credit)) ? APP.L(cfg.credit) : "";
+      btn.setAttribute("data-cursor", audio.paused ? "play" : "link");
     }
     paint();
     APP.onLang(paint);

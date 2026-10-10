@@ -9,24 +9,35 @@
   }
 
   function makeDraggable(stickerEl, host) {
-    var dragging = false, ox = 0, oy = 0;
+    var dragging = false, sx = 0, sy = 0, left = 0, top = 0;
+    function place(x, y) {
+      var r = stickerEl.getBoundingClientRect();
+      var padX = Math.max(0, (r.width - stickerEl.offsetWidth) / 2);
+      var padY = Math.max(0, (r.height - stickerEl.offsetHeight) / 2);
+      stickerEl.style.left = Math.max(padX, Math.min(x, host.clientWidth - stickerEl.offsetWidth - padX)) + "px";
+      stickerEl.style.top = Math.max(padY, Math.min(y, host.clientHeight - stickerEl.offsetHeight - padY)) + "px";
+      stickerEl.style.right = "auto"; stickerEl.style.bottom = "auto";
+    }
     stickerEl.addEventListener("pointerdown", function (e) {
+      if (!e.isPrimary || e.button !== 0) return;
       dragging = true;
       stickerEl.setPointerCapture(e.pointerId);
-      var r = stickerEl.getBoundingClientRect();
-      ox = e.clientX - r.left; oy = e.clientY - r.top;
+      sx = e.clientX; sy = e.clientY;
+      left = stickerEl.offsetLeft; top = stickerEl.offsetTop;
       stickerEl.style.zIndex = 20;
       e.preventDefault();
     });
     stickerEl.addEventListener("pointermove", function (e) {
       if (!dragging) return;
-      var hr = host.getBoundingClientRect();
-      stickerEl.style.left = (e.clientX - hr.left - ox) + "px";
-      stickerEl.style.top = (e.clientY - hr.top - oy) + "px";
-      stickerEl.style.right = "auto";
-      stickerEl.style.bottom = "auto";
+      place(left + e.clientX - sx, top + e.clientY - sy);
     });
-    stickerEl.addEventListener("pointerup", function () { dragging = false; });
+    function stop() { dragging = false; }
+    stickerEl.addEventListener("pointerup", stop);
+    stickerEl.addEventListener("pointercancel", stop);
+    stickerEl.addEventListener("lostpointercapture", stop);
+    new ResizeObserver(function () {
+      if (stickerEl.style.left.endsWith("px")) place(stickerEl.offsetLeft, stickerEl.offsetTop);
+    }).observe(host);
   }
 
   window.PAGE = {
@@ -44,16 +55,17 @@
 
       /* 左：照片 + 贴纸 + 引言 */
       var photoWrap = el('<div class="about-photo"></div>');
+      var photoStage = el('<div class="about-photo-stage"></div>');
       var frame = el('<div class="photo-frame"><img alt=""></div>');
       frame.querySelector("img").src = window.SITE.portrait;
-      photoWrap.appendChild(frame);
+      photoStage.appendChild(frame); photoWrap.appendChild(photoStage);
       (window.DECORATIONS.about || []).forEach(function (s) {
-        var st = el('<div class="about-sticker" style="width:' + s.width + '"></div>');
+        var st = el('<div class="about-sticker' + (s.compact === false ? ' sticker-desktop' : '') + '" data-sticker-id="' + s.id + '" style="width:' + s.width + '"></div>');
         Object.keys(s.pos).forEach(function (k) { st.style[k] = s.pos[k]; });
         st.style.transform = "rotate(" + (s.rotate || 0) + "deg)";
         st.innerHTML = '<img src="' + s.src + '" alt="">';
-        photoWrap.appendChild(st);
-        if (s.draggable) makeDraggable(st, photoWrap);
+        photoStage.appendChild(st);
+        if (s.draggable) makeDraggable(st, photoStage);
       });
       var quote = el('<p class="about-quote"></p>');
       painters.push(function () { quote.textContent = APP.t("photoQuote"); });
