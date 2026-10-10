@@ -52,7 +52,10 @@ window.PROJECTS = [
       zh: "以 1992 年上海证券热潮为背景的实体互动装置：观众通过电话、茶杯与认购机做出选择。1984—1993 为作品主题年代，非创作年份。团队项目 / 阶段性展示。",
       en: "A physical interactive installation set against the 1992 Shanghai securities boom: visitors make choices via a landline, a teacup and a subscription terminal. 1984–1993 is the work’s thematic era, not its creation year. Team project / staged showcase."
     },
-    role: { zh: "参与交互流程、视觉内容与部分三维建模（团队项目）", en: "Contributed to interaction flow, visual content and partial 3D modelling (team project)" },
+    role: {
+      zh: "在团队协作中，主要负责项目的视觉设计，并借助 AI 辅助完成电话交互部分的 Arduino 组件编程与装置的最终组装。",
+      en: "Within the team, I primarily worked on the project’s visual design and used AI assistance to complete the Arduino programming for the telephone interaction and the final assembly of the installation."
+    },
     year: 2026, yearConfirmed: true,
     themeYears: { zh: "主题年代 1984—1993", en: "Thematic era 1984–1993" },
     types: ["installation", "web"],
