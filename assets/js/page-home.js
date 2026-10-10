@@ -18,6 +18,10 @@
       var open = item.classList.toggle("is-open");
       body.style.height = open ? (inner.scrollHeight + "px") : "0px";
     });
+    /* 展开高度是写死的 px，内容变长（切英文）或视口变窄时必须重算，否则会截断 */
+    item._sync = function () {
+      if (item.classList.contains("is-open")) body.style.height = inner.scrollHeight + "px";
+    };
     item._paint = function (txt) { item.querySelector(".drop-label").textContent = txt; };
     return item;
   }
@@ -55,7 +59,7 @@
       sec1.appendChild(lab1);
       var list1 = el('<div class="drop-list"></div>');
       (window.CATEGORIES || []).filter(function (c) { return c.enabled; }).forEach(function (c) {
-        var titles = (window.PROJECTS || []).filter(function (p) {
+        var titles = window.PROJECT_DATA.sorted().filter(function (p) {
           return (p.types || []).indexOf(c.id) >= 0;
         }).map(function (p) { return el("<span></span>"); });
         var item = dropItem("", titles);
@@ -63,7 +67,7 @@
         item._paintTitles = function () {
           var inner = item.querySelector(".drop-body-inner");
           inner.innerHTML = "";
-          (window.PROJECTS || []).filter(function (p) { return (p.types || []).indexOf(c.id) >= 0; })
+          window.PROJECT_DATA.sorted().filter(function (p) { return (p.types || []).indexOf(c.id) >= 0; })
             .forEach(function (p) {
               var s = el("<span></span>");
               s.textContent = APP.L(p.title);
@@ -82,7 +86,7 @@
       var lab2 = el('<div class="section-label" style="margin-bottom:16px"></div>');
       sec2.appendChild(lab2);
       var row = el('<div class="vhs-row"></div>');
-      (window.PROJECTS || []).filter(function (p) { return p.featured || p.status === "ongoing"; })
+      window.PROJECT_DATA.sorted().filter(function (p) { return p.featured || p.status === "ongoing"; })
         .forEach(function (p) {
           var t = el('<a class="tape" data-status="' + (p.status || "normal") + '"></a>');
           t.href = "work.html#" + p.id;
@@ -132,9 +136,13 @@
       painters.push(function () { lab3.textContent = APP.t("clients"); });
       page.appendChild(sec3);
 
-      function paintAll() { painters.forEach(function (f) { f(); }); }
+      function syncDrops() {
+        document.querySelectorAll(".drop-item").forEach(function (it) { it._sync(); });
+      }
+      function paintAll() { painters.forEach(function (f) { f(); }); syncDrops(); }
       paintAll();
       APP.onLang(paintAll);
+      addEventListener("resize", syncDrops);
     },
     renderLang: function () {}
   };

@@ -4,6 +4,8 @@
    title/ desc/ role  双语
    year          创作年份；未核实填 null，配 yearConfirmed:false（前端显示"待核实"）
    yearConfirmed false=占位/待核实
+   yearStart/yearEnd 跨年项目的开始年和结束年；显示完整范围，按结束年排序
+   productionStatus "produced"=已落地，与 normal/ongoing 独立；不改变录像带颜色
    themeYears    作品主题年代（仅裁金用，非创作年份）
    types[]       分类标签ID（见 categories.js），一个项目可多个；筛选不复制项目
    status        "normal" | "ongoing"(在制→脊背品红)
@@ -12,7 +14,7 @@
                  nature 标注真实性质（实物照片/建模过程/AI概念图·效果模拟/海报/分镜…）
    links[]       { label:{zh,en}, url, external:true }
    featured      是否上首页精选行
-   order         年份确认前的临时排序（越小越前）
+   order         同一结束年份内的原有相对顺序（越小越前）
 */
 window.PROJECTS = [
 
@@ -24,8 +26,8 @@ window.PROJECTS = [
       en: "Inspired by the titan arum’s rare, fleeting bloom, this project translates its layered forms into a sculptural lamp. AI concept exploration, ZBrush modelling, 3D printing, and lighting experiments explore beauty in nature that is easily overlooked."
     },
     role: { zh: "独立完成：概念、建模、打印与光影实验", en: "Solo: concept, modelling, printing and lighting experiments" },
-    year: null, yearConfirmed: false,
-    types: ["product", "threed", "ai"],
+    year: 2025, yearConfirmed: true,
+    types: ["installation"],
     status: "normal",
     cover: "assets/media/works/silent-bloom/result-lit-prev.jpg",
     media: [
@@ -51,9 +53,9 @@ window.PROJECTS = [
       en: "A physical interactive installation set against the 1992 Shanghai securities boom: visitors make choices via a landline, a teacup and a subscription terminal. 1984–1993 is the work’s thematic era, not its creation year. Team project / staged showcase."
     },
     role: { zh: "参与交互流程、视觉内容与部分三维建模（团队项目）", en: "Contributed to interaction flow, visual content and partial 3D modelling (team project)" },
-    year: null, yearConfirmed: false,
+    year: 2026, yearConfirmed: true,
     themeYears: { zh: "主题年代 1984—1993", en: "Thematic era 1984–1993" },
-    types: ["installation", "visual", "web"],
+    types: ["installation", "web"],
     status: "normal",
     cover: "assets/media/works/caijin/poster-1-prev.jpg",
     media: [
@@ -79,8 +81,8 @@ window.PROJECTS = [
       en: "Short film “Beyond Four AM”: a visual exploration of timekeeping and memory. Includes poster, 15-second teaser and full film."
     },
     role: { zh: "海报版式与视觉整合；AI 影像剪辑", en: "Poster layout and visual integration; AI footage editing" },
-    year: null, yearConfirmed: false,
-    types: ["film", "visual"],
+    year: 2026, yearConfirmed: true,
+    types: ["film"],
     status: "normal",
     cover: "assets/media/works/four-am/poster-prev.jpg",
     media: [
@@ -102,8 +104,8 @@ window.PROJECTS = [
       en: "Jägermeister “One Touch, Out of Bounds” ad film, vertical format. Contributed to concept and storyboard."
     },
     role: { zh: "创意与分镜参与", en: "Concept and storyboard contribution" },
-    year: null, yearConfirmed: false,
-    types: ["film", "storyboard"],
+    year: 2026, yearConfirmed: true,
+    types: ["film"],
     status: "normal",
     cover: "assets/media/works/jagermeister/cover-prev.jpg",
     media: [
@@ -124,8 +126,8 @@ window.PROJECTS = [
       en: "Selected cultural-relic character posters. AIGC-assisted character exploration; layout and visual integration by me."
     },
     role: { zh: "版式与视觉整合（AIGC 辅助造型）", en: "Layout and visual integration (AIGC-assisted forms)" },
-    year: null, yearConfirmed: false,
-    types: ["visual", "ai"],
+    year: 2026, yearConfirmed: true,
+    types: ["visual"],
     status: "normal",
     cover: "assets/media/works/relic-posters/p1-prev.jpg",
     media: [
@@ -151,23 +153,24 @@ window.PROJECTS = [
       en: "Fan-merch design collection: roll-up banners, uchiwa fans and omamori (acrylic tags). Browse by group."
     },
     role: { zh: "独立完成", en: "Solo" },
-    year: null, yearConfirmed: false,
+    year: 2026, yearConfirmed: true,
     types: ["visual"],
     status: "normal",
+    productionStatus: "produced",
     cover: "assets/media/works/fan-visuals/banner-1-prev.jpg",
     media: [
-      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-1.jpg", prev: "assets/media/works/fan-visuals/banner-1-prev.jpg", nature: { zh: "易拉宝成品", en: "Roll-up banner" }, caption: { zh: "易拉宝 1", en: "Banner 1" } },
-      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-2.jpg", prev: "assets/media/works/fan-visuals/banner-2-prev.jpg", nature: { zh: "易拉宝成品", en: "Roll-up banner" }, caption: { zh: "易拉宝 2", en: "Banner 2" } },
-      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-3.jpg", prev: "assets/media/works/fan-visuals/banner-3-prev.jpg", nature: { zh: "易拉宝成品", en: "Roll-up banner" }, caption: { zh: "易拉宝 3", en: "Banner 3" } },
-      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-5.jpg", prev: "assets/media/works/fan-visuals/banner-5-prev.jpg", nature: { zh: "易拉宝成品", en: "Roll-up banner" }, caption: { zh: "易拉宝 5", en: "Banner 5" } },
-      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-6.jpg", prev: "assets/media/works/fan-visuals/banner-6-prev.jpg", nature: { zh: "易拉宝成品", en: "Roll-up banner" }, caption: { zh: "易拉宝 6", en: "Banner 6" } },
-      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-7.jpg", prev: "assets/media/works/fan-visuals/banner-7-prev.jpg", nature: { zh: "易拉宝成品", en: "Roll-up banner" }, caption: { zh: "易拉宝 7", en: "Banner 7" } },
-      { type: "image", group: "fan", src: "assets/media/works/fan-visuals/fan-1.jpg", prev: "assets/media/works/fan-visuals/fan-1-prev.jpg", nature: { zh: "大王扇预览", en: "Uchiwa preview" }, caption: { zh: "大王扇 1", en: "Fan 1" } },
-      { type: "image", group: "fan", src: "assets/media/works/fan-visuals/fan-2.jpg", prev: "assets/media/works/fan-visuals/fan-2-prev.jpg", nature: { zh: "大王扇预览", en: "Uchiwa preview" }, caption: { zh: "大王扇 2", en: "Fan 2" } },
-      { type: "image", group: "fan", src: "assets/media/works/fan-visuals/fan-3.jpg", prev: "assets/media/works/fan-visuals/fan-3-prev.jpg", nature: { zh: "大王扇预览", en: "Uchiwa preview" }, caption: { zh: "大王扇 3", en: "Fan 3" } },
-      { type: "image", group: "fan", src: "assets/media/works/fan-visuals/fan-4.jpg", prev: "assets/media/works/fan-visuals/fan-4-prev.jpg", nature: { zh: "大王扇预览", en: "Uchiwa preview" }, caption: { zh: "大王扇 4", en: "Fan 4" } },
-      { type: "image", group: "omamori", src: "assets/media/works/fan-visuals/omamori-1.jpg", prev: "assets/media/works/fan-visuals/omamori-1-prev.jpg", nature: { zh: "御守／亚克力吊牌", en: "Omamori / acrylic tag" }, caption: { zh: "御守 1", en: "Omamori 1" } },
-      { type: "image", group: "omamori", src: "assets/media/works/fan-visuals/omamori-2.jpg", prev: "assets/media/works/fan-visuals/omamori-2-prev.jpg", nature: { zh: "御守／亚克力吊牌", en: "Omamori / acrylic tag" }, caption: { zh: "御守 2", en: "Omamori 2" } }
+      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-1.jpg", prev: "assets/media/works/fan-visuals/banner-1-prev.jpg", nature: { zh: "设计稿", en: "Design artwork" }, caption: { zh: "易拉宝 1", en: "Banner 1" } },
+      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-2.jpg", prev: "assets/media/works/fan-visuals/banner-2-prev.jpg", nature: { zh: "设计稿", en: "Design artwork" }, caption: { zh: "易拉宝 2", en: "Banner 2" } },
+      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-3.jpg", prev: "assets/media/works/fan-visuals/banner-3-prev.jpg", nature: { zh: "设计稿", en: "Design artwork" }, caption: { zh: "易拉宝 3", en: "Banner 3" } },
+      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-5.jpg", prev: "assets/media/works/fan-visuals/banner-5-prev.jpg", nature: { zh: "设计稿", en: "Design artwork" }, caption: { zh: "易拉宝 5", en: "Banner 5" } },
+      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-6.jpg", prev: "assets/media/works/fan-visuals/banner-6-prev.jpg", nature: { zh: "设计稿", en: "Design artwork" }, caption: { zh: "易拉宝 6", en: "Banner 6" } },
+      { type: "image", group: "banner", src: "assets/media/works/fan-visuals/banner-7.jpg", prev: "assets/media/works/fan-visuals/banner-7-prev.jpg", nature: { zh: "设计稿", en: "Design artwork" }, caption: { zh: "易拉宝 7", en: "Banner 7" } },
+      { type: "image", group: "fan", src: "assets/media/works/fan-visuals/fan-1.jpg", prev: "assets/media/works/fan-visuals/fan-1-prev.jpg", nature: { zh: "设计预览", en: "Design preview" }, caption: { zh: "大王扇 1", en: "Fan 1" } },
+      { type: "image", group: "fan", src: "assets/media/works/fan-visuals/fan-2.jpg", prev: "assets/media/works/fan-visuals/fan-2-prev.jpg", nature: { zh: "设计预览", en: "Design preview" }, caption: { zh: "大王扇 2", en: "Fan 2" } },
+      { type: "image", group: "fan", src: "assets/media/works/fan-visuals/fan-3.jpg", prev: "assets/media/works/fan-visuals/fan-3-prev.jpg", nature: { zh: "设计预览", en: "Design preview" }, caption: { zh: "大王扇 3", en: "Fan 3" } },
+      { type: "image", group: "fan", src: "assets/media/works/fan-visuals/fan-4.jpg", prev: "assets/media/works/fan-visuals/fan-4-prev.jpg", nature: { zh: "设计预览", en: "Design preview" }, caption: { zh: "大王扇 4", en: "Fan 4" } },
+      { type: "image", group: "omamori", src: "assets/media/works/fan-visuals/omamori-1.jpg", prev: "assets/media/works/fan-visuals/omamori-1-prev.jpg", nature: { zh: "设计预览", en: "Design preview" }, caption: { zh: "御守 1", en: "Omamori 1" } },
+      { type: "image", group: "omamori", src: "assets/media/works/fan-visuals/omamori-2.jpg", prev: "assets/media/works/fan-visuals/omamori-2-prev.jpg", nature: { zh: "设计预览", en: "Design preview" }, caption: { zh: "御守 2", en: "Omamori 2" } }
     ],
     groups: [
       { id: "banner",  zh: "易拉宝", en: "Roll-up Banners" },
@@ -184,8 +187,8 @@ window.PROJECTS = [
     title: { zh: "小金宣传片 · 苏州（金鸡湖）篇分镜", en: "Xiaojin Promo · Suzhou (Jinji Lake) Storyboard" },
     desc: { zh: "小金宣传片苏州（金鸡湖）篇分镜，连续两页。镜头节奏、景别与场景衔接。", en: "Storyboard for the Xiaojin Suzhou (Jinji Lake) promo, two consecutive boards. Pacing, shot size and scene transitions." },
     role: { zh: "分镜设计", en: "Storyboard design" },
-    year: null, yearConfirmed: false,
-    types: ["storyboard"],
+    year: 2026, yearConfirmed: true,
+    types: ["film"],
     status: "normal",
     cover: "assets/media/works/xiaojin-suzhou/b1-prev.jpg",
     media: [
@@ -201,8 +204,8 @@ window.PROJECTS = [
     title: { zh: "小金宣传片 · 西湖篇分镜", en: "Xiaojin Promo · West Lake Storyboard" },
     desc: { zh: "小金宣传片西湖篇分镜，连续两页。", en: "Storyboard for the Xiaojin West Lake promo, two consecutive boards." },
     role: { zh: "分镜设计", en: "Storyboard design" },
-    year: null, yearConfirmed: false,
-    types: ["storyboard"],
+    year: 2026, yearConfirmed: true,
+    types: ["film"],
     status: "normal",
     cover: "assets/media/works/xiaojin-xihu/b1-prev.jpg",
     media: [
@@ -218,8 +221,8 @@ window.PROJECTS = [
     title: { zh: "商业广告分镜 · 披荆斩棘的哥哥", en: "Commercial Storyboard · Call Me by Fire" },
     desc: { zh: "《披荆斩棘的哥哥》广告分镜。参与广告镜头构思与画面方案。", en: "Ad storyboard for “Call Me by Fire”. Contributed to shot ideas and visual plans." },
     role: { zh: "参与广告镜头构思与画面方案", en: "Contributed to shot ideas and visual plans" },
-    year: null, yearConfirmed: false,
-    types: ["storyboard"],
+    year: 2026, yearConfirmed: true,
+    types: ["film"],
     status: "normal",
     cover: "assets/media/works/ad-pjzj/b1-prev.jpg",
     media: [
@@ -233,8 +236,8 @@ window.PROJECTS = [
     title: { zh: "千问 App 广告分镜", en: "Qwen App Ad Storyboard" },
     desc: { zh: "千问 App 广告分镜。", en: "Ad storyboard for the Qwen app." },
     role: { zh: "分镜设计", en: "Storyboard design" },
-    year: null, yearConfirmed: false,
-    types: ["storyboard"],
+    year: 2026, yearConfirmed: true,
+    types: ["film"],
     status: "normal",
     cover: "assets/media/works/ad-qianwen/b1-prev.jpg",
     media: [
@@ -248,7 +251,7 @@ window.PROJECTS = [
     title: { zh: "平潭IM两岸青年影展海报", en: "Pingtan IM Cross-Strait Youth Film Festival Poster" },
     desc: { zh: "平潭IM两岸青年影展海报。", en: "Poster for the Pingtan IM Cross-Strait Youth Film Festival." },
     role: { zh: "海报设计", en: "Poster design" },
-    year: null, yearConfirmed: false,
+    year: 2026, yearConfirmed: true,
     types: ["visual"],
     status: "normal",
     cover: "assets/media/works/pingtan-im/poster-prev.jpg",
@@ -263,7 +266,7 @@ window.PROJECTS = [
     title: { zh: "校学生会换届大会海报", en: "Student Union Election Congress Poster" },
     desc: { zh: "校学生会换届大会海报。", en: "Poster for the student union election congress." },
     role: { zh: "海报设计", en: "Poster design" },
-    year: null, yearConfirmed: false,
+    year: 2025, yearConfirmed: true,
     types: ["visual"],
     status: "normal",
     cover: "assets/media/works/student-union/poster-prev.jpg",
@@ -278,7 +281,7 @@ window.PROJECTS = [
     title: { zh: "地下偶像招募海报", en: "Underground Idol Recruitment Poster" },
     desc: { zh: "地下偶像招募海报。", en: "Recruitment poster for an underground idol group." },
     role: { zh: "海报设计", en: "Poster design" },
-    year: null, yearConfirmed: false,
+    year: 2025, yearConfirmed: true,
     types: ["visual"],
     status: "normal",
     cover: "assets/media/works/underground-idol/poster-prev.jpg",
@@ -291,15 +294,41 @@ window.PROJECTS = [
   {
     id: "ja-ip",
     title: { zh: "JA 学生公司 IP", en: "JA Student Company IP" },
-    desc: { zh: "JA 学生公司角色形象及品牌应用探索。获 2023 JA 中国学生公司大赛营销特别奖。", en: "Character and brand application exploration for a JA student company. Won the Marketing Special Award at the 2023 JA China Student Company Competition." },
+    desc: { zh: "JA 学生公司角色形象及品牌应用探索。团队获 2023 JA 中国学生公司大赛营销特别奖。", en: "Character and brand application exploration for a JA student company. The team received the Marketing Special Award at the 2023 JA China Student Company Competition." },
     role: { zh: "角色形象及品牌应用探索", en: "Character and brand application exploration" },
-    year: null, yearConfirmed: false,
-    types: ["brand", "visual"],
+    year: null, yearStart: 2022, yearEnd: 2023, yearConfirmed: true,
+    types: ["visual"],
     status: "normal",
     cover: "assets/media/works/ja-ip/cover-prev.jpg",
     media: [
-      { type: "image", src: "assets/media/works/ja-ip/cover.jpg", prev: "assets/media/works/ja-ip/cover-prev.jpg", nature: { zh: "品牌视觉", en: "Brand visual" }, caption: { zh: "角色与品牌应用", en: "Character and brand application" } }
+      { type: "image", src: "assets/media/works/ja-ip/cover.jpg", prev: "assets/media/works/ja-ip/cover-prev.jpg", nature: { zh: "品牌视觉", en: "Brand visual" }, caption: { zh: "角色与品牌应用", en: "Character and brand application" } },
+      { type: "image", src: "assets/media/works/ja-ip/ja-product-display.jpg", prev: "assets/media/works/ja-ip/ja-product-display-prev.jpg", nature: { zh: "现场实拍", en: "Event photograph" }, caption: { zh: "商品与摊位展示", en: "Product and booth display" } },
+      { type: "image", src: "assets/media/works/ja-ip/ja-popup-booth.jpg", prev: "assets/media/works/ja-ip/ja-popup-booth-prev.jpg", nature: { zh: "现场实拍", en: "Event photograph" }, caption: { zh: "快闪店现场", en: "Pop-up booth" } },
+      { type: "image", src: "assets/media/works/ja-ip/ja-campus-booth.jpg", prev: "assets/media/works/ja-ip/ja-campus-booth-prev.jpg", nature: { zh: "现场实拍", en: "Event photograph" }, caption: { zh: "校园摊位现场", en: "Campus booth" } },
+      { type: "image", src: "assets/media/works/ja-ip/ja-best-product-award.jpg", prev: "assets/media/works/ja-ip/ja-best-product-award-prev.jpg", nature: { zh: "现场实拍", en: "Event photograph" }, caption: { zh: "团队最佳产品奖合影", en: "Team photo with the Best Product Award" } },
+      { type: "image", src: "assets/media/works/ja-ip/ja-finalist-team.jpg", prev: "assets/media/works/ja-ip/ja-finalist-team-prev.jpg", nature: { zh: "现场实拍", en: "Event photograph" }, caption: { zh: "全国赛入围团队合影", en: "National competition finalist team" } },
+      { type: "image", src: "assets/media/works/ja-ip/ja-competition-team.jpg", prev: "assets/media/works/ja-ip/ja-competition-team-prev.jpg", nature: { zh: "现场实拍", en: "Event photograph" }, caption: { zh: "2023 JA 中国学生公司大赛合影", en: "Team photo at the 2023 JA China Student Company Competition" } }
     ],
     links: [], featured: false, order: 14
   }
 ];
+
+/* 首页与作品页共用年份格式与排序；背景年代 themeYears 不参与比较。 */
+window.PROJECT_DATA = {
+  endYear: function (p) {
+    if (!p.yearConfirmed) return -Infinity;
+    return Number.isInteger(p.yearEnd) ? p.yearEnd : (Number.isInteger(p.year) ? p.year : -Infinity);
+  },
+  formatYear: function (p) {
+    if (!p.yearConfirmed) return null;
+    if (Number.isInteger(p.yearStart) && Number.isInteger(p.yearEnd) && p.yearEnd >= p.yearStart)
+      return p.yearStart === p.yearEnd ? String(p.yearStart) : p.yearStart + "—" + p.yearEnd;
+    return Number.isInteger(p.year) ? String(p.year) : null;
+  },
+  sorted: function (list) {
+    return (list || window.PROJECTS || []).slice().sort(function (a, b) {
+      var aYear = window.PROJECT_DATA.endYear(a), bYear = window.PROJECT_DATA.endYear(b);
+      return aYear !== bYear ? bYear - aYear : (a.order || 0) - (b.order || 0);
+    });
+  }
+};

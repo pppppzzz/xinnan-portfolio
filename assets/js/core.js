@@ -70,19 +70,18 @@
       requestAnimationFrame(loop);
     })();
 
-    document.addEventListener("mouseover", function (e) {
-      var tape = e.target.closest("[data-cursor='tape']");
-      var link = e.target.closest("a,button,[data-cursor='link']");
-      document.body.classList.toggle("cursor-tape", !!tape);
-      document.body.classList.toggle("cursor-link", !tape && !!link);
-      if (tape) {
-        glyph.textContent = tape.getAttribute("data-cursor-label") || "";
-      }
-    });
-    APP.onLang(function () {
-      var active = document.querySelector("[data-cursor='tape']:hover");
-      if (active) glyph.textContent = active.getAttribute("data-cursor-label") || "";
-    });
+    function paintCursor(target) {
+      var hint = target && target.closest("[data-cursor]");
+      var labelled = hint && (hint.dataset.cursor === "tape" || hint.dataset.cursor === "zoom");
+      var link = target && target.closest("a,button,[role='button'],[data-cursor='link']");
+      document.body.classList.toggle("cursor-tape", !!labelled);
+      document.body.classList.toggle("cursor-zoom", !!hint && hint.dataset.cursor === "zoom");
+      document.body.classList.toggle("cursor-link", !labelled && !!link);
+      glyph.textContent = labelled ? (hint.getAttribute("data-cursor-label") || "") : "";
+    }
+    APP.refreshCursor = function () { paintCursor(document.elementFromPoint(x, y)); };
+    document.addEventListener("mouseover", function (e) { paintCursor(e.target); });
+    APP.onLang(function () { requestAnimationFrame(APP.refreshCursor); });
   }
 
   /* ---------------- 顶栏 ---------------- */
