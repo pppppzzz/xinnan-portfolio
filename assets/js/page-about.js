@@ -60,6 +60,10 @@
         place(position.x * host.clientWidth, position.y * host.clientHeight);
       } else if (movedPosition) {
         place(f.x + position.x * f.width, f.y + position.y * f.height);
+      } else if (position.anchor === "photo-origin" || position.anchor === "bio-origin") {
+        // 本人手动摆放的最终构图：保存PNG原点相对照片/正文的比例，不含视口或滚动坐标。
+        if (position.anchor === "photo-origin") place(f.x + position.x * f.width, f.y + position.y * f.height);
+        else place(b.left - h.left + position.x * b.width, b.bottom - h.top + position.y * f.width);
       } else {
         /* 可见主体的旋转后中心决定构图，透明画布/面具飘带不决定视觉位置。 */
         var w = parseFloat(stickerEl.style.width), scale = w / image.naturalWidth;
