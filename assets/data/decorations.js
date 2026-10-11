@@ -15,12 +15,19 @@ window.DECORATIONS = {
     { id: "m-poodle", src: "assets/media/stickers/sticker-poodle-grey.png", pos: { bottom: "15vh", right: "12vw" }, width: "clamp(90px, 9vw, 125px)", rotate: -5, compact: false }
   ],
 
-  /* 个人页照片四角可拖动；窄屏仅保留相机和猫。 */
+  /* 个人页：位置相对照片，x/y 分别以照片宽/高为单位，size 是宽度比。
+     手机单独布局；四种动物同时保留。faceFit 使用原图像素坐标校准眼孔，非吸附点。 */
   about: [
-    { id: "a-camera", src: "assets/media/stickers/sticker-camera.png", pos: { top: "-3%", left: "-1%" }, width: "clamp(84px, 10vw, 128px)", rotate: -8, draggable: true },
-    { id: "a-mask", src: "assets/media/stickers/sticker-mask.png", pos: { top: "3%", right: "1%" }, width: "clamp(110px, 13vw, 170px)", rotate: 8, draggable: true, compact: false },
-    { id: "a-cat", src: "assets/media/stickers/sticker-cat-blue.png", pos: { bottom: "3%", left: "1%" }, width: "clamp(70px, 7vw, 100px)", rotate: -7, draggable: true },
-    { id: "a-budgie", src: "assets/media/stickers/sticker-budgie-blue-white.png", pos: { bottom: "8%", right: "1%" }, width: "clamp(65px, 6vw, 85px)", rotate: 6, draggable: true, compact: false }
+    { id: "a-camera", src: "assets/media/stickers/sticker-camera.png", layout: { x: .02, y: .03, size: .34 }, mobile: { x: .03, y: .04, size: .36 }, rotate: -8, draggable: true },
+    { id: "a-ticket", src: "assets/media/stickers/sticker-concert-ticket.png", layout: { x: .53, y: .025, size: .44 }, mobile: { x: .53, y: .03, size: .43 }, rotate: 7, draggable: true },
+    { id: "a-headphones", src: "assets/media/stickers/sticker-headphones.png", layout: { x: .02, y: .74, size: .32 }, mobile: { x: .03, y: .73, size: .34 }, rotate: -9, draggable: true },
+    { id: "a-travel", src: "assets/media/stickers/sticker-travel-tag.png", layout: { x: .75, y: .65, size: .20 }, mobile: { x: .75, y: .64, size: .21 }, rotate: 8, draggable: true },
+    { id: "a-cat", src: "assets/media/stickers/sticker-cat-blue.png", layout: { x: .015, y: 1.05, size: .24 }, mobile: { x: .015, y: 1.04, size: .25 }, rotate: -7, draggable: true },
+    { id: "a-cat-white", src: "assets/media/stickers/sticker-cat-blue-white.png", layout: { x: .285, y: 1.025, size: .235 }, mobile: { x: .29, y: 1.02, size: .24 }, rotate: 6, draggable: true },
+    { id: "a-budgie", src: "assets/media/stickers/sticker-budgie-blue-white.png", layout: { x: .55, y: 1.055, size: .18 }, mobile: { x: .56, y: 1.05, size: .185 }, rotate: -5, draggable: true },
+    { id: "a-poodle", src: "assets/media/stickers/sticker-poodle-grey.png", layout: { x: .735, y: 1.045, size: .25 }, mobile: { x: .74, y: 1.035, size: .25 }, rotate: 5, draggable: true },
+    { id: "a-mask", src: "assets/media/stickers/sticker-mask.png", layout: { x: .075, y: -.22 }, mobile: { x: .08, y: -.235 }, draggable: true,
+      faceFit: { portraitSize: [825, 1100], portraitEyes: [[309, 390], [450, 360]], imageSize: [2172, 724], eyeHoles: [[1056, 400], [1518, 360]] } }
   ],
 
   /* 联系页留白中的黑胶唱片，窄屏隐藏。 */
