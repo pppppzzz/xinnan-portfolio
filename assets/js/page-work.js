@@ -366,7 +366,11 @@
       count: el.querySelector(".media-count")
     };
 
-    var rec = { project: project, el: el, refs: refs, mediaIndex: 0, video: null };
+    /* Open the selected cover without reordering or removing gallery media. */
+    var mainIndex = (project.media || []).findIndex(function (m) {
+      return m.src === project.cover || m.prev === project.cover;
+    });
+    var rec = { project: project, el: el, refs: refs, mediaIndex: Math.max(0, mainIndex), video: null };
     el.addEventListener("transitionend", function (e) {
       if (e.target === el && e.propertyName === "width" && el.classList.contains("is-open")) alignOpenTape(rec);
     });
