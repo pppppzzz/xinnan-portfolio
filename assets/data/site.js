@@ -51,7 +51,10 @@ window.SITE = {
   /* 首页本人提供的封面视频；音轨直接随视频播放，不使用独立BGM。 */
   hero: {
     video: "video/封面vedio.mp4",
-    poster: "assets/media/video/hero-poster.jpg"
+    poster: "assets/media/video/hero-poster.jpg",
+    titleTop: { zh: "来都来了", en: "YOU’RE HERE ALREADY" },
+    titleBottom: { zh: "看一眼嘛", en: "TAKE A PEEK" },
+    scrollHint: { zh: "往下翻翻，有点东西 ↓", en: "SCROLL DOWN, THERE’S GOOD STUFF ↓" }
   },
 
   /* BGM：默认不播放。src 留空 → 隐藏播放按钮。选定后填 mp3 路径。 */
