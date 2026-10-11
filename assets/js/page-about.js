@@ -60,6 +60,13 @@
         place(position.x * host.clientWidth, position.y * host.clientHeight);
       } else if (position.anchor === "bioBelow") {
         place(b.left - h.left + position.x * b.width, b.bottom - h.top + 24 + position.y * f.height);
+      } else if (position.anchor === "music" || position.anchor === "pets") {
+        var mobile = window.matchMedia("(max-width: 900px)").matches;
+        var pets = position.anchor === "pets";
+        var groupWidth = pets ? Math.min(b.width * (mobile ? .94 : .80), f.width * (mobile ? 1.10 : .90)) : b.width;
+        var groupLeft = b.left - h.left + b.width * (mobile ? .03 : (pets ? .12 : .08));
+        var groupTop = b.bottom - h.top + 24 + f.width * (pets ? (mobile ? .70 : .65) : (mobile ? .08 : .10));
+        place(groupLeft + position.x * groupWidth, groupTop + position.y * groupWidth);
       } else {
         place(f.x + position.x * f.width, f.y + position.y * f.height);
       }

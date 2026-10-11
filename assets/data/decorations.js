@@ -16,18 +16,18 @@ window.DECORATIONS = {
     { id: "m-star", src: "assets/media/stickers/sticker-smiling-star.png", pos: { bottom: "36vh", right: "8vw" }, width: "clamp(55px, 6vw, 80px)", rotate: 12 }
   ],
 
-  /* 个人页：photo 的x/y相对照片；bioBelow的x相对正文宽、y相对照片高。
-     size 为照片宽度比；手机单独布局。faceFit 校准主体与眼孔，非吸附点。 */
+  /* 初始组合依照片/正文尺寸计算；用户拖动后另存位置，不再使用初始锚点。
+     photo 相对照片，music/pets 相对组合区域；size 为照片宽度比。 */
   about: [
-    { id: "a-camera", src: "assets/media/stickers/sticker-camera.png", layout: { anchor: "photo", x: .02, y: .03, size: .36 }, mobile: { anchor: "photo", x: .01, y: .04, size: .40 }, rotate: -8, draggable: true },
-    { id: "a-ticket", src: "assets/media/stickers/sticker-concert-ticket.png", layout: { anchor: "bioBelow", x: .52, y: .08, size: .48 }, mobile: { anchor: "bioBelow", x: .49, y: .06, size: .52 }, rotate: 7, draggable: true },
-    { id: "a-headphones", src: "assets/media/stickers/sticker-headphones.png", layout: { anchor: "bioBelow", x: .05, y: .06, size: .36 }, mobile: { anchor: "bioBelow", x: .04, y: .10, size: .40 }, rotate: -9, draggable: true },
-    { id: "a-travel", src: "assets/media/stickers/sticker-travel-tag.png", layout: { anchor: "bioBelow", x: .73, y: .38, size: .23 }, mobile: { anchor: "bioBelow", x: .76, y: .28, size: .24 }, rotate: 8, draggable: true },
-    { id: "a-cat", src: "assets/media/stickers/sticker-cat-blue.png", layout: { anchor: "photo", x: .09, y: 1.035, size: .28 }, mobile: { anchor: "photo", x: .09, y: 1.035, size: .30 }, rotate: -7, draggable: true },
-    { id: "a-cat-white", src: "assets/media/stickers/sticker-cat-blue-white.png", layout: { anchor: "bioBelow", x: .08, y: .40, size: .28 }, mobile: { anchor: "bioBelow", x: .02, y: .61, size: .34 }, rotate: 6, draggable: true },
-    { id: "a-budgie", src: "assets/media/stickers/sticker-budgie-blue-white.png", layout: { anchor: "bioBelow", x: .40, y: .55, size: .24 }, mobile: { anchor: "bioBelow", x: .38, y: .54, size: .29 }, rotate: -5, draggable: true },
-    { id: "a-poodle", src: "assets/media/stickers/sticker-poodle-grey.png", layout: { anchor: "bioBelow", x: .65, y: .72, size: .32 }, mobile: { anchor: "bioBelow", x: .68, y: .67, size: .36 }, rotate: 5, draggable: true },
-    { id: "a-mask", src: "assets/media/stickers/sticker-mask.png", layout: { anchor: "photo", x: .035, y: -.29 }, mobile: { anchor: "photo", x: -.035, y: -.31 }, draggable: true,
+    { id: "a-camera", src: "assets/media/stickers/sticker-camera.png", layout: { anchor: "photo", x: -.09, y: -.04, size: .36 }, mobile: { anchor: "photo", x: -.07, y: -.045, size: .40 }, rotate: -8, draggable: true },
+    { id: "a-ticket", src: "assets/media/stickers/sticker-concert-ticket.png", layout: { anchor: "music", x: .23, y: .04, size: .48 }, mobile: { anchor: "music", x: .24, y: .035, size: .54 }, rotate: 8, draggable: true },
+    { id: "a-headphones", src: "assets/media/stickers/sticker-headphones.png", layout: { anchor: "music", x: 0, y: 0, size: .36 }, mobile: { anchor: "music", x: 0, y: 0, size: .37 }, rotate: -14, draggable: true },
+    { id: "a-travel", src: "assets/media/stickers/sticker-travel-tag.png", layout: { anchor: "photo", x: .84, y: .80, size: .22 }, mobile: { anchor: "photo", x: .80, y: .80, size: .24 }, rotate: 11, draggable: true },
+    { id: "a-cat", src: "assets/media/stickers/sticker-cat-blue.png", layout: { anchor: "pets", x: 0, y: .08, size: .30 }, mobile: { anchor: "pets", x: 0, y: .10, size: .34 }, rotate: -7, draggable: true },
+    { id: "a-cat-white", src: "assets/media/stickers/sticker-cat-blue-white.png", layout: { anchor: "pets", x: .30, y: 0, size: .315 }, mobile: { anchor: "pets", x: .30, y: 0, size: .35 }, rotate: 6, draggable: true },
+    { id: "a-budgie", src: "assets/media/stickers/sticker-budgie-blue-white.png", layout: { anchor: "pets", x: .26, y: -.10, size: .18 }, mobile: { anchor: "pets", x: .25, y: -.10, size: .20 }, rotate: -5, draggable: true },
+    { id: "a-poodle", src: "assets/media/stickers/sticker-poodle-grey.png", layout: { anchor: "pets", x: .54, y: .18, size: .29 }, mobile: { anchor: "pets", x: .59, y: .17, size: .34 }, rotate: 5, draggable: true },
+    { id: "a-mask", src: "assets/media/stickers/sticker-mask.png", layout: { anchor: "photo", x: .07, y: -.20 }, mobile: { anchor: "photo", x: .02, y: -.20 }, draggable: true,
       faceFit: { bodyScale: 1.15, portraitSize: [825, 1100], portraitEyes: [[309, 390], [450, 360]], imageSize: [2172, 724], eyeHoles: [[1056, 400], [1518, 360]] } }
   ],
 
@@ -35,6 +35,21 @@ window.DECORATIONS = {
   contact: [
     { id: "c-vinyl", src: "assets/media/stickers/sticker-vinyl.png", pos: { top: "10vh", right: "8vw" }, width: "clamp(90px, 9vw, 130px)", rotate: 0, spin: true }
   ],
+
+  /* 联系页动态素材池。bodyBox是alpha>180的主体像素边界，只用于等比尺寸/出场中心。 */
+  contactRain: {
+    distance: 30, interval: 120, maxActive: 18, duration: [1600, 2100], bodySize: [60, 110],
+    pool: [
+      { src: "assets/media/stickers/sticker-envelope.png", weight: 2, canvas: [1536, 1024], bodyBox: [213, 91, 1337, 963] },
+      { src: "assets/media/stickers/sticker-chat-bubble.png", weight: 2, canvas: [1536, 1024], bodyBox: [236, 81, 1302, 943] },
+      { src: "assets/media/stickers/sticker-clover.png", weight: 2, canvas: [1327, 1186], bodyBox: [166, 53, 1172, 1158] },
+      { src: "assets/media/stickers/sticker-smiling-star.png", weight: 1, canvas: [1536, 1024], bodyBox: [338, 85, 1199, 932] },
+      { src: "assets/media/stickers/sticker-cat-blue.png", weight: 1, canvas: [1315, 1197], bodyBox: [124, 164, 1192, 1125] },
+      { src: "assets/media/stickers/sticker-cat-blue-white.png", weight: 1, canvas: [1313, 1198], bodyBox: [68, 111, 1246, 1140] },
+      { src: "assets/media/stickers/sticker-budgie-blue-white.png", weight: 1, canvas: [1316, 1195], bodyBox: [213, 98, 1103, 1115] },
+      { src: "assets/media/stickers/sticker-poodle-grey.png", weight: 1, canvas: [1536, 1024], bodyBox: [151, 65, 1388, 975] }
+    ]
+  },
 
   /* 首页继续留白，其余命名 PNG 已保存备用。 */
   home: []

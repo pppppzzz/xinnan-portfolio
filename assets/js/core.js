@@ -235,6 +235,7 @@
       if (!href || href.charAt(0) === "#") return;
       e.preventDefault();
       if (menuOpen) setMenu(false);
+      if (window.PAGE && window.PAGE.destroy) window.PAGE.destroy();
       curtainIn(function () { location.href = href; });
     });
   }

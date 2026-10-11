@@ -523,7 +523,7 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 /* 贴纸允许溢出照片边缘，但不能把整页撑出横向滚动条 */
 .page-about { overflow-x: clip; }
 .about-photo { position: relative; }
-.about-photo-stage { position: relative; padding: 48% 0 34%; overflow: visible; }
+.about-photo-stage { position: relative; padding: 35% 0 16%; overflow: visible; }
 .about-photo .photo-frame { position: relative; width: 100%; margin-left: 2vw; border-radius: 8px; overflow: hidden; background: var(--cream-2); }
 .about-photo .photo-frame img { width: 100%; height: auto; }
 .about-sticker { position: absolute; z-index: 5; pointer-events: auto; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
@@ -566,6 +566,8 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 .contact-spin { position: absolute; top: 8vh; right: 6vw; width: clamp(90px, 9vw, 130px); pointer-events: none; }
 .contact-spin img, .contact-spin svg { width: 100%; height: auto; animation: spin 14s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+.contact-rain { position: fixed; inset: 0; z-index: 1000; overflow: hidden; pointer-events: none; contain: strict; }
+.contact-rain img { position: absolute; display: block; height: auto; pointer-events: none; user-select: none; will-change: transform, opacity; }
 
 .contact-wordmark {
   font-size: clamp(56px, 15vw, 220px);
@@ -628,7 +630,7 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
   .lightbox button { padding: 8px; font-size: 12px; }
   .lb-footer { padding: 8px; }
   .about-grid { grid-template-columns: 1fr; }
-  .about-photo-stage { padding: 44% 0 32%; }
+  .about-photo-stage { padding: 32% 0 25%; }
   .about-photo .photo-frame { width: 84%; margin-left: 8%; }
   .about-playground { padding-bottom: 100%; }
   .sticker-desktop, .contact-spin { display: none; }
