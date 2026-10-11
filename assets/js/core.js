@@ -108,6 +108,25 @@
       '</div>';
     document.body.appendChild(bar);
 
+    if (window.PAGE && PAGE.id !== 'home') {
+      var back = document.createElement('a');
+      back.className = 'nav-back'; back.href = 'index.html';
+      document.body.appendChild(back);
+      function paintBack() {
+        back.textContent = APP.t('back');
+        var prev = APP.navigation.previous();
+        back.href = PAGE.id === 'work' && location.hash ? location.pathname + location.search : (prev ? prev.url : 'index.html');
+      }
+      back.addEventListener('click', function (e) {
+        if (e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        if (PAGE.handleBack && PAGE.handleBack()) return;
+        APP.navigation.back();
+      });
+      paintBack(); APP.onLang(paintBack);
+      document.addEventListener('site-navigation-restored', paintBack);
+    }
+
     function paint() {
       bar.querySelector(".brand").textContent = APP.L(window.SITE.brand);
       bar.querySelectorAll(".lang-toggle button").forEach(function (b) {
@@ -228,15 +247,29 @@
 
   /* 拦截站内链接 */
   function interceptNav() {
+    var navigating = false;
+    APP.navigate = function (href, replace) {
+      if (navigating || !APP.navigation.siteURL(href)) return;
+      navigating = true; APP.navigation.prepare(href, replace);
+      if (menuOpen) setMenu(false);
+      if (window.PAGE && PAGE.destroy) PAGE.destroy();
+      curtainIn(function () { if (replace) location.replace(href); else location.href = href; });
+    };
+    window.addEventListener('pageshow', function (e) {
+      if (e.persisted) {
+        navigating = false;
+        var lang = storedLang(); if (lang === 'zh' || lang === 'en') APP.setLang(lang);
+        curtainOut();
+      }
+    });
     document.addEventListener("click", function (e) {
       var a = e.target.closest("a[data-nav]");
       if (!a) return;
+      if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank') return;
       var href = a.getAttribute("href");
       if (!href || href.charAt(0) === "#") return;
-      e.preventDefault();
-      if (menuOpen) setMenu(false);
-      if (window.PAGE && window.PAGE.destroy) window.PAGE.destroy();
-      curtainIn(function () { location.href = href; });
+      if (!APP.navigation.siteURL(href)) return;
+      e.preventDefault(); APP.navigate(href);
     });
   }
 
@@ -392,6 +425,7 @@
   /* ---------------- 启动 ---------------- */
   document.addEventListener("DOMContentLoaded", function () {
     document.documentElement.lang = (APP.lang === "zh") ? "zh-CN" : "en";
+    APP.navigation = window.createSiteNavigation(APP);
     buildCursor();
     buildCurtain();
     buildTopbar();
@@ -403,5 +437,6 @@
     buildFooter();
     buildBgm();
     curtainOut();
+    APP.navigation.restore();
   });
 })();

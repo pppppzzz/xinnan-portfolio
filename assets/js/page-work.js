@@ -73,10 +73,12 @@
   }
 
   function readState() {
+    var restored = APP.navigation.saved();
     try {
       state.filter = localStorage.getItem(FILTER_KEY) || "all";
-      state.openId = localStorage.getItem(OPEN_KEY) || null;
     } catch (e) {}
+    state.openId = null;
+    if (restored) state.filter = restored.filter;
     var legacy = window.LEGACY_FILTERS || {};
     if (Object.prototype.hasOwnProperty.call(legacy, state.filter)) state.filter = legacy[state.filter];
     var validFilter = state.filter === "all" || (window.CATEGORIES || []).some(function (c) {
@@ -85,9 +87,8 @@
     if (!validFilter) state.filter = "all";
     // The home "More work" entry explicitly opens the complete overview,
     // while ordinary work navigation continues to restore the saved selection.
-    if (new URLSearchParams(location.search).get("filter") === "all" && !location.hash) {
-      state.filter = "all"; state.openId = null;
-    }
+    var queryFilter = new URLSearchParams(location.search).get('filter');
+    if (!restored && (queryFilter === 'all' || (window.CATEGORIES || []).some(function (c) { return c.enabled && c.id === queryFilter; }))) state.filter = queryFilter;
     var h = location.hash.replace("#", "");
     if (h) state.openId = h;
     var target = (window.PROJECTS || []).filter(function (p) { return p.id === state.openId; })[0];
@@ -142,9 +143,9 @@
         state.filter = cat.id;
         state.openId = null;
         saveState();
-        history.replaceState(null, "", location.pathname + location.search);
         renderRow();
         paintFilter();
+        APP.navigation.replace(listURL());
       });
       filterEl.appendChild(b);
     });
@@ -372,7 +373,7 @@
     });
     var rec = { project: project, el: el, refs: refs, mediaIndex: Math.max(0, mainIndex), video: null };
     el.addEventListener("transitionend", function (e) {
-      if (e.target === el && e.propertyName === "width" && el.classList.contains("is-open")) alignOpenTape(rec);
+      if (e.target === el && e.propertyName === "width" && el.classList.contains("is-open") && !rec.restorePosition) alignOpenTape(rec);
     });
     refs.prev.addEventListener("click", function () { selectMedia(rec, rec.mediaIndex - 1); });
     refs.next.addEventListener("click", function () { selectMedia(rec, rec.mediaIndex + 1); });
@@ -554,7 +555,16 @@
   }
 
   /* ---------------- 展开 / 收起 ---------------- */
-  function openTape(rec) {
+  function listURL() {
+    var url = new URL(location.href); url.hash = ''; url.searchParams.set('filter', state.filter);
+    return url.pathname + url.search;
+  }
+  function openTape(rec, restoring) {
+    if (!restoring) {
+      if (state.openId) APP.navigation.replace('#' + rec.project.id);
+      else APP.navigation.push('#' + rec.project.id);
+    }
+    rec.restorePosition = !!restoring && !!APP.navigation.saved();
     hidePreview();
     tapes.forEach(function (t) { t.el.classList.remove("is-open"); if (t.video) t.video.pause(); paintTapeCursor(t); });
     rec.el.classList.add("is-open");
@@ -562,18 +572,21 @@
     rowEl.classList.add("has-open");
     state.openId = rec.project.id;
     saveState();
-    history.replaceState(null, "", "#" + rec.project.id);
-    alignOpenTape(rec);
-    requestAnimationFrame(function () { if (rec.el.isConnected && rec.el.classList.contains("is-open")) alignOpenTape(rec); });
+    if (!rec.restorePosition) {
+      alignOpenTape(rec);
+      requestAnimationFrame(function () { if (rec.el.isConnected && rec.el.classList.contains("is-open")) alignOpenTape(rec); });
+    }
+    if (!restoring) APP.navigation.capture();
   }
   function closeTape(rec) {
+    if (APP.navigation.canBackToList()) { APP.navigation.back(); return; }
     rec.el.classList.remove("is-open");
     paintTapeCursor(rec);
     rowEl.classList.remove("has-open");
     if (rec.video) rec.video.pause();
     state.openId = null;
     saveState();
-    history.replaceState(null, "", location.pathname + location.search);
+    APP.navigation.replace(listURL());
   }
 
   /* ---------------- 行渲染 ---------------- */
@@ -606,13 +619,35 @@
 
     if (state.openId) {
       var target = tapes.filter(function (t) { return t.project.id === state.openId; })[0];
-      if (target) openTape(target);
+      if (target) openTape(target, true);
     }
   }
 
   /* ---------------- 页面接入 ---------------- */
   window.PAGE = {
     id: "work",
+    captureState: function () {
+      return {filter:state.filter, openId:state.openId, rowX:rowEl ? rowEl.scrollLeft : 0};
+    },
+    restoreState: function (saved) {
+      if (!rowEl) return;
+      if (lightboxEl && lightboxEl.open) closeLightbox();
+      var nextId = location.hash.slice(1) || null;
+      var nextFilter = saved ? saved.filter : state.filter;
+      if (state.openId !== nextId || state.filter !== nextFilter) {
+        state.filter = nextFilter; state.openId = nextId;
+        var target = (window.PROJECTS || []).find(function (p) { return p.id === nextId; });
+        if (target && state.filter !== 'all' && target.types.indexOf(state.filter) < 0) state.filter = 'all';
+        saveState(); renderRow(); paintFilter();
+      }
+    },
+    restoreScroll: function (saved) { if (saved && rowEl) { rowEl.scrollLeft = saved.rowX || 0; hidePreview(); } },
+    handleBack: function () {
+      if (lightboxEl && lightboxEl.open) { closeLightbox(); return true; }
+      var rec = tapes.find(function (t) { return t.project.id === state.openId; });
+      if (!rec) return false;
+      closeTape(rec); return true;
+    },
     init: function () {
       readState();
       var h = document.querySelector("#page .container");

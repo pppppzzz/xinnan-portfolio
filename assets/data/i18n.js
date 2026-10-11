@@ -1,6 +1,7 @@
 /* 界面 UI 文案（双语）。项目/分类/个人文案在各自数据文件里。 */
 window.I18N = {
   zh: {
+    back: "← 返回",
     menuOpen: "菜单",
     menuClose: "关闭",
     langToggle: "EN",
@@ -69,6 +70,7 @@ window.I18N = {
     clients: "合作与委托"
   },
   en: {
+    back: "← Back",
     menuOpen: "MENU",
     menuClose: "Close",
     langToggle: "中文",
