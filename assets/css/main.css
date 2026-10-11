@@ -686,3 +686,23 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 
 /* Embed the original contact page body after the restored home content. */
 .home-contact-page { padding-top: 96px; min-height: 100vh; }
+
+/* Two quiet content links use the existing selected section's lower whitespace. */
+.home-selected { position: relative; }
+.home-selected-links {
+  position: absolute; left: 0; right: 0; bottom: 7vh;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  font-size: 13px; line-height: 1.5;
+}
+.home-selected-links a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  white-space: nowrap; color: var(--black); opacity: .65;
+  text-underline-offset: 4px; text-decoration-thickness: 1px;
+  transition: color .2s, opacity .2s;
+}
+.home-selected-links .home-more-work { font-weight: 500; opacity: .85; }
+.home-selected-links a:hover { color: var(--purple); opacity: 1; text-decoration-line: underline; }
+.home-selected-links a:focus-visible { outline: 2px solid var(--purple); outline-offset: 3px; }
+@media (max-width: 900px), (max-height: 550px) {
+  .home-selected-links { position: static; }
+}

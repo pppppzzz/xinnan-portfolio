@@ -206,7 +206,7 @@
       wrap.appendChild(sec1);
 
       /* ---- 精选/在制 录像带行 ---- */
-      var sec2 = el('<section class="home-section"></section>');
+      var sec2 = el('<section class="home-section home-selected"></section>');
       var lab2 = el('<div class="section-label" style="margin-bottom:16px"></div>');
       sec2.appendChild(lab2);
       var row = el('<div class="vhs-row"></div>');
@@ -226,6 +226,12 @@
           row.appendChild(t);
         });
       sec2.appendChild(row);
+      var entries = el('<div class="home-selected-links"><a class="home-more-work" href="work.html?filter=all" data-nav></a><a class="home-about-link" href="about.html" data-nav></a></div>');
+      sec2.appendChild(entries);
+      painters.push(function () {
+        entries.querySelector('.home-more-work').textContent = APP.t('homeMoreWork');
+        entries.querySelector('.home-about-link').textContent = APP.t('homeAboutLink');
+      });
       painters.push(function () { lab2.textContent = APP.t("featured"); });
       wrap.appendChild(sec2);
 

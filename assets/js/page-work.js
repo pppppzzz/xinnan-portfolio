@@ -76,6 +76,11 @@
       return c.enabled && c.id === state.filter;
     });
     if (!validFilter) state.filter = "all";
+    // The home "More work" entry explicitly opens the complete overview,
+    // while ordinary work navigation continues to restore the saved selection.
+    if (new URLSearchParams(location.search).get("filter") === "all" && !location.hash) {
+      state.filter = "all"; state.openId = null;
+    }
     var h = location.hash.replace("#", "");
     if (h) state.openId = h;
     var target = (window.PROJECTS || []).filter(function (p) { return p.id === state.openId; })[0];

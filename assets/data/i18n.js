@@ -56,6 +56,8 @@ window.I18N = {
     photoQuote: "贴纸可以拖动，试试看。",
     expertises: "专长",
     featured: "精选与在制",
+    homeMoreWork: "更多作品 →",
+    homeAboutLink: "顺便认识一下嘛 ↗",
     clients: "合作与委托"
   },
   en: {
@@ -114,6 +116,8 @@ window.I18N = {
     photoQuote: "Drag the stickers — give it a try.",
     expertises: "Expertise",
     featured: "Selected & In Progress",
+    homeMoreWork: "MORE WORK →",
+    homeAboutLink: "A LITTLE ABOUT ME ↗",
     clients: "Clients & Commissions"
   }
 };
