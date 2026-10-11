@@ -1,4 +1,4 @@
-/* 首页：sticky 滚动展开视频/占位 + 专长下拉 + 精选录像带行 + 跑马灯 + 合作下拉。 */
+/* 首页：已确认滚动封面 → 三张精选录像带 → 关于我 → 共享联系方式。 */
 (function () {
   "use strict";
 
@@ -6,24 +6,6 @@
     var d = document.createElement("div");
     d.innerHTML = html.trim();
     return d.firstChild;
-  }
-
-  function dropItem(headText, bodyNodes) {
-    var item = el('<div class="drop-item"><button class="drop-head"><span class="drop-label"></span><span class="drop-sign">+</span></button><div class="drop-body"><div class="drop-body-inner"></div></div></div>');
-    item.querySelector(".drop-label").textContent = headText;
-    var body = item.querySelector(".drop-body");
-    var inner = item.querySelector(".drop-body-inner");
-    bodyNodes.forEach(function (n) { inner.appendChild(n); });
-    item.querySelector(".drop-head").addEventListener("click", function () {
-      var open = item.classList.toggle("is-open");
-      body.style.height = open ? (inner.scrollHeight + "px") : "0px";
-    });
-    /* 展开高度是写死的 px，内容变长（切英文）或视口变窄时必须重算，否则会截断 */
-    item._sync = function () {
-      if (item.classList.contains("is-open")) body.style.height = inner.scrollHeight + "px";
-    };
-    item._paint = function (txt) { item.querySelector(".drop-label").textContent = txt; };
-    return item;
   }
 
   var stopHero = function () {};
@@ -174,99 +156,90 @@
       }
       page.appendChild(hero);
 
-      var wrap = el('<div class="container"></div>');
-      page.appendChild(wrap);
-
-      /* ---- 专长下拉 ---- */
-      var sec1 = el('<section class="home-section"></section>');
-      var lab1 = el('<div class="section-label" style="margin-bottom:16px"></div>');
-      sec1.appendChild(lab1);
-      var list1 = el('<div class="drop-list"></div>');
-      (window.CATEGORIES || []).filter(function (c) { return c.enabled; }).forEach(function (c) {
-        var titles = window.PROJECT_DATA.sorted().filter(function (p) {
-          return (p.types || []).indexOf(c.id) >= 0;
-        }).map(function (p) { return el("<span></span>"); });
-        var item = dropItem("", titles);
-        item._cat = c;
-        item._paintTitles = function () {
-          var inner = item.querySelector(".drop-body-inner");
-          inner.innerHTML = "";
-          window.PROJECT_DATA.sorted().filter(function (p) { return (p.types || []).indexOf(c.id) >= 0; })
-            .forEach(function (p) {
-              var s = el("<span></span>");
-              s.textContent = APP.L(p.title);
-              inner.appendChild(s);
-            });
-        };
-        painters.push(function () { item._paint(APP.L(c)); item._paintTitles(); });
-        list1.appendChild(item);
-      });
-      sec1.appendChild(list1);
-      painters.push(function () { lab1.textContent = APP.t("expertises"); });
-      wrap.appendChild(sec1);
-
-      /* ---- 精选/在制 录像带行 ---- */
-      var sec2 = el('<section class="home-section"></section>');
-      var lab2 = el('<div class="section-label" style="margin-bottom:16px"></div>');
-      sec2.appendChild(lab2);
-      var row = el('<div class="vhs-row"></div>');
-      window.PROJECT_DATA.sorted().filter(function (p) { return p.featured || p.status === "ongoing"; })
-        .forEach(function (p) {
-          var t = el('<a class="tape" data-status="' + (p.status || "normal") + '"></a>');
-          t.href = "work.html#" + p.id;
-          t.setAttribute("data-nav", "");
-          t.innerHTML = '<div class="tape-preview"><img src="' + p.cover + '" alt=""></div>' +
-                        '<div class="tape-spine"><span class="spine-title"></span></div>';
-          t._paint = function () { t.querySelector(".spine-title").textContent = APP.L(p.title); };
-          painters.push(t._paint);
-          row.appendChild(t);
+      var config = SITE.home;
+      var featured = el('<section class="home-section home-featured container" aria-labelledby="home-featured-title"><div class="home-section-head"><h2 id="home-featured-title" class="section-label"></h2><a class="home-link home-all-work" href="work.html" data-nav></a></div><div class="vhs-row home-featured-row"></div></section>');
+      var row = featured.querySelector('.home-featured-row');
+      config.featuredIds.forEach(function (id, index) {
+        var p = PROJECTS.find(function (p) { return p.id === id; });
+        if (!p) return;
+        var item = el('<div class="home-feature-item"></div>');
+        item.style.setProperty('--enter-delay', (index*90)+'ms');
+        var tape = el('<a class="tape home-tape" data-nav><div class="tape-spine" aria-hidden="true"><span class="spine-title"></span></div><div class="home-tape-face"><div class="home-tape-cover"><img alt=""></div><div class="home-tape-label"><h3 class="home-tape-title"></h3><p class="home-tape-category"></p></div></div></a>');
+        tape.href = 'work.html#'+p.id; tape.dataset.status = p.status || 'normal';
+        tape.querySelector('img').src = p.cover;
+        tape.querySelector('img').loading = 'lazy';
+        tape.style.setProperty('--tape-angle', [-3,2,-1.5][index]+'deg');
+        painters.push(function () {
+          var title = APP.L(p.title);
+          var categories = (p.types || []).map(function (id) {
+            return CATEGORIES.find(function (c) { return c.id === id; });
+          }).filter(Boolean).map(APP.L).join(' · ');
+          tape.querySelector('.home-tape-title').textContent = title;
+          tape.querySelector('.spine-title').textContent = title;
+          tape.querySelector('.home-tape-category').textContent = categories;
+          tape.setAttribute('aria-label', title + ' — ' + categories);
         });
-      sec2.appendChild(row);
-      painters.push(function () { lab2.textContent = APP.t("featured"); });
-      wrap.appendChild(sec2);
-
-      /* ---- 跑马灯 ---- */
-      var mq = el('<div class="marquee"><div class="marquee-track"></div></div>');
-      var track = mq.querySelector(".marquee-track");
-      for (var i = 0; i < 8; i++) track.appendChild(el("<span></span>"));
+        item.appendChild(tape); row.appendChild(item);
+      });
       painters.push(function () {
-        track.querySelectorAll("span").forEach(function (s, idx) {
-          s.textContent = (idx % 2 === 0) ? APP.L(window.SITE.copy.tagline) : APP.L(window.SITE.copy.directions);
-        });
+        featured.querySelector('h2').textContent = APP.L(config.featuredTitle);
+        featured.querySelector('.home-all-work').textContent = APP.L(config.allWork);
       });
-      page.appendChild(mq);
-      if (window.gsap) {
-        gsap.to(track, { xPercent: -50, duration: 22, ease: "none", repeat: -1 });
-      }
+      page.appendChild(featured);
 
-      /* ---- 合作下拉 ---- */
-      var sec3 = el('<section class="home-section container"></section>');
-      var lab3 = el('<div class="section-label" style="margin-bottom:16px"></div>');
-      sec3.appendChild(lab3);
-      var list3 = el('<div class="drop-list"></div>');
-      var cItem = dropItem("", []);
-      cItem._paintClients = function () {
-        var inner = cItem.querySelector(".drop-body-inner");
-        inner.innerHTML = "";
-        (window.SITE.clients || []).forEach(function (c) {
-          var s = el("<span></span>");
-          s.textContent = APP.L(c);
-          inner.appendChild(s);
-        });
-      };
-      painters.push(function () { cItem._paint(APP.t("clients")); cItem._paintClients(); });
-      list3.appendChild(cItem);
-      sec3.appendChild(list3);
-      painters.push(function () { lab3.textContent = APP.t("clients"); });
-      page.appendChild(sec3);
-
-      function syncDrops() {
-        document.querySelectorAll(".drop-item").forEach(function (it) { it._sync(); });
+      var about = el('<section class="home-section home-about container" aria-labelledby="home-about-title"><div class="home-about-copy"><h2 id="home-about-title" class="display"></h2><p class="home-about-description"></p><a class="home-link" href="about.html" data-nav></a></div></section>');
+      var bird = DECORATIONS.about.find(function (entry) { return entry.id === 'a-budgie'; });
+      if (bird) {
+        var sticker = el('<img class="home-about-bird" alt="" aria-hidden="true" draggable="false" loading="lazy">');
+        sticker.src = bird.src; about.appendChild(sticker);
       }
-      function paintAll() { painters.forEach(function (f) { f(); }); syncDrops(); }
-      paintAll();
-      APP.onLang(paintAll);
-      addEventListener("resize", syncDrops);
+      painters.push(function () {
+        var h = about.querySelector('h2'); h.textContent = APP.L(config.aboutTitle);
+        if (APP.lang === 'zh') {
+          h.textContent = h.textContent.slice(0,-1);
+          var accent = el('<span class="hero-accent"></span>'); accent.textContent = '嘛'; h.appendChild(accent);
+        }
+        about.querySelector('p').textContent = APP.L(config.aboutDescription);
+        about.querySelector('a').textContent = APP.L(config.aboutLink);
+      });
+      page.appendChild(about);
+
+      var contact = el('<section class="home-section home-contact" data-footer-slot aria-labelledby="home-contact-title"><div class="home-contact-inner container"><h2 id="home-contact-title" class="home-contact-title display"></h2><p class="home-contact-intro"></p></div></section>');
+      var contacts = CONTACT.buildList(painters);
+      contact.querySelector('.home-contact-inner').appendChild(contacts.node);
+      painters.push(function () {
+        contact.querySelector('h2').textContent = APP.L(config.contactTitle);
+        contact.querySelector('.home-contact-intro').textContent = APP.L(config.contactDescription);
+      });
+      page.appendChild(contact);
+      var stopRain = CONTACT.initRain(contact);
+
+      /* Entrance runs once; hover belongs to the inner tape so transforms never compete. */
+      var reduced = matchMedia('(prefers-reduced-motion: reduce)'), observer;
+      function showCards() {
+        row.querySelectorAll('.home-feature-item').forEach(function (item) { item.classList.add('is-visible'); });
+        if (observer) observer.disconnect();
+      }
+      if (!reduced.matches && window.IntersectionObserver) {
+        row.classList.add('will-reveal');
+        observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+          });
+        }, {threshold:.12});
+        row.querySelectorAll('.home-feature-item').forEach(function (item) { observer.observe(item); });
+      } else showCards();
+      reduced.addEventListener('change', function () { if (reduced.matches) showCards(); });
+      window.PAGE.destroy = function () { stopHero(); stopRain(); if (observer) observer.disconnect(); };
+      window.addEventListener('pagehide', window.PAGE.destroy);
+      window.addEventListener('pageshow', function (event) {
+        if (event.persisted) { stopRain = CONTACT.initRain(contact); showCards(); }
+      });
+      function paintAll() {
+        page.classList.toggle('home-english', APP.lang === 'en');
+        painters.forEach(function (f) { f(); });
+      }
+      paintAll(); APP.onLang(paintAll);
     },
     renderLang: function () {},
     destroy: function () { stopHero(); }

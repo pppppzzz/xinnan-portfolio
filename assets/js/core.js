@@ -290,7 +290,7 @@
     var f = document.createElement("footer");
     f.className = "footer container";
     f.innerHTML = '<span class="f-brand"></span><span class="f-thanks"></span>';
-    page.appendChild(f);
+    (page.querySelector("[data-footer-slot]") || page).appendChild(f);
     function paint() {
       f.querySelector(".f-brand").textContent = "© " + new Date().getFullYear() + " " + APP.L(window.SITE.brand);
       f.querySelector(".f-thanks").textContent = APP.L(window.SITE.copy.footer);
