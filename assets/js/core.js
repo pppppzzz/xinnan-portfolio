@@ -140,7 +140,7 @@
     }).join("");
     var stickers = (window.DECORATIONS.menu || []).map(function (s) {
       var pos = Object.keys(s.pos).map(function (k) { return k + ":" + s.pos[k]; }).join(";");
-      return '<div class="menu-sticker' + (s.compact === false ? ' sticker-desktop' : '') + '" data-rot="' + (s.rotate || 0) + '" style="' + pos + ';width:' + s.width + '">' +
+      return '<div class="menu-sticker' + (s.compact === false ? ' sticker-desktop' : '') + '" data-sticker-id="' + s.id + '" data-rot="' + (s.rotate || 0) + '" style="' + pos + ';width:' + s.width + '">' +
              '<img src="' + s.src + '" alt=""></div>';
     }).join("");
 

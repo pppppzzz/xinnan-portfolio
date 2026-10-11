@@ -8,8 +8,8 @@
     return d.firstChild;
   }
 
-  function makeDraggable(stickerEl, host, frame, config) {
-    var dragging = false, pointerId, sx = 0, sy = 0, left = 0, top = 0;
+  function makeDraggable(stickerEl, host, frame, bio, config) {
+    var dragging = false, pointerId, grabX = 0, grabY = 0, lastX = 0, lastY = 0;
     var movedPosition = null;
     var fit = config.faceFit;
     var image = stickerEl.querySelector("img");
@@ -21,7 +21,8 @@
       var faceDY = fit.portraitEyes[1][1] - fit.portraitEyes[0][1];
       var holeDX = fit.eyeHoles[1][0] - fit.eyeHoles[0][0];
       var holeDY = fit.eyeHoles[1][1] - fit.eyeHoles[0][1];
-      widthRatio = Math.hypot(faceDX, faceDY) / Math.hypot(holeDX, holeDY) * fit.imageSize[0] / fit.portraitSize[0];
+      /* 主体/眼孔等比放大15%，飘带不作为主体宽度的测量依据。 */
+      widthRatio = Math.hypot(faceDX, faceDY) / Math.hypot(holeDX, holeDY) * fit.imageSize[0] / fit.portraitSize[0] * (fit.bodyScale || 1);
       rotation = (Math.atan2(faceDY, faceDX) - Math.atan2(holeDY, holeDX)) * 180 / Math.PI;
     }
     stickerEl.style.transform = "rotate(" + rotation + "deg)";
@@ -30,39 +31,59 @@
       var r = stickerEl.getBoundingClientRect();
       var w = parseFloat(getComputedStyle(stickerEl).width), h = parseFloat(getComputedStyle(stickerEl).height);
       var padX = Math.max(0, (r.width - w) / 2), padY = Math.max(0, (r.height - h) / 2);
-      /* 面具的飘带对齐脸部时会稍微越过照片左缘，允许进入页边留白。
-         舞台本身不裁切贴纸；仍守住视口边缘与右侧正文。 */
-      var minX = fit ? -host.getBoundingClientRect().left + padX : padX;
+      /* 整个内容区均可拖动；旋转后的边缘仍在视口/内容区域内。 */
+      var minX = -host.getBoundingClientRect().left + padX;
       stickerEl.style.left = Math.max(minX, Math.min(x, host.clientWidth - w - padX)) + "px";
       stickerEl.style.top = Math.max(padY, Math.min(y, host.clientHeight - h - padY)) + "px";
     }
+    function photoBounds() {
+      var h = host.getBoundingClientRect(), f = frame.getBoundingClientRect();
+      return { x: f.left - h.left, y: f.top - h.top, width: f.width, height: f.height };
+    }
     function remember() {
-      /* 保存相对照片的位置，窗口/手机横竖屏改变后仍跟随照片比例。 */
-      movedPosition = {
-        x: (parseFloat(stickerEl.style.left) - frame.offsetLeft) / frame.clientWidth,
-        y: (parseFloat(stickerEl.style.top) - frame.offsetTop) / frame.clientHeight
-      };
+      var f = photoBounds(), x = parseFloat(stickerEl.style.left), y = parseFloat(stickerEl.style.top);
+      var cx = x + stickerEl.offsetWidth / 2, cy = y + stickerEl.offsetHeight / 2;
+      // 放在照片上时随照片缩放，其余位置相对整个内容区保存。
+      if (cx >= f.x && cx <= f.x + f.width && cy >= f.y && cy <= f.y + f.height) {
+        movedPosition = { anchor: "photo", x: (x - f.x) / f.width, y: (y - f.y) / f.height };
+      } else {
+        movedPosition = { anchor: "area", x: x / host.clientWidth, y: y / host.clientHeight };
+      }
     }
     function layout() {
       if (!frame.clientWidth) return;
       var initial = window.matchMedia("(max-width: 900px)").matches ? (config.mobile || config.layout) : config.layout;
       var position = movedPosition || initial;
-      stickerEl.style.width = frame.clientWidth * (widthRatio || initial.size) + "px";
-      place(frame.offsetLeft + position.x * frame.clientWidth, frame.offsetTop + position.y * frame.clientHeight);
+      var f = photoBounds(), h = host.getBoundingClientRect(), b = bio.getBoundingClientRect();
+      stickerEl.style.width = f.width * (widthRatio || initial.size) + "px";
+      if (position.anchor === "area") {
+        place(position.x * host.clientWidth, position.y * host.clientHeight);
+      } else if (position.anchor === "bioBelow") {
+        place(b.left - h.left + position.x * b.width, b.bottom - h.top + 24 + position.y * f.height);
+      } else {
+        place(f.x + position.x * f.width, f.y + position.y * f.height);
+      }
+    }
+    function followPointer() {
+      var h = host.getBoundingClientRect();
+      place(lastX - h.left - grabX, lastY - h.top - grabY);
+      remember();
     }
     stickerEl.addEventListener("pointerdown", function (e) {
       if (!config.draggable || dragging || !e.isPrimary || e.button !== 0) return;
       dragging = true; pointerId = e.pointerId;
       stickerEl.setPointerCapture(e.pointerId);
-      sx = e.clientX; sy = e.clientY;
-      left = parseFloat(stickerEl.style.left); top = parseFloat(stickerEl.style.top);
+      var h = host.getBoundingClientRect();
+      lastX = e.clientX; lastY = e.clientY;
+      grabX = e.clientX - h.left - parseFloat(stickerEl.style.left);
+      grabY = e.clientY - h.top - parseFloat(stickerEl.style.top);
       stickerEl.style.zIndex = fit ? 30 : 20;
       e.preventDefault();
     });
     stickerEl.addEventListener("pointermove", function (e) {
       if (!dragging || e.pointerId !== pointerId) return;
-      place(left + e.clientX - sx, top + e.clientY - sy);
-      remember();
+      lastX = e.clientX; lastY = e.clientY;
+      followPointer();
       e.preventDefault();
     });
     function stop(e) {
@@ -72,6 +93,7 @@
     stickerEl.addEventListener("pointerup", stop);
     stickerEl.addEventListener("pointercancel", stop);
     stickerEl.addEventListener("lostpointercapture", stop);
+    window.addEventListener("scroll", function () { if (dragging) followPointer(); }, { passive: true });
     image.addEventListener("load", layout);
     return layout;
   }
@@ -87,6 +109,7 @@
       page.appendChild(el('<div class="container">')).appendChild(head);
 
       var container = page.querySelector(".container");
+      var playground = el('<div class="about-playground"></div>');
       var grid = el('<div class="about-grid"></div>');
 
       /* 左：照片 + 贴纸 + 引言 */
@@ -96,12 +119,6 @@
       frame.querySelector("img").src = window.SITE.portrait;
       photoStage.appendChild(frame); photoWrap.appendChild(photoStage);
       var stickerLayouts = [];
-      (window.DECORATIONS.about || []).forEach(function (s) {
-        var st = el('<div class="about-sticker" data-sticker-id="' + s.id + '"></div>');
-        st.innerHTML = '<img src="' + s.src + '" alt="" draggable="false">';
-        photoStage.appendChild(st);
-        stickerLayouts.push(makeDraggable(st, photoStage, frame, s));
-      });
       var quote = el('<p class="about-quote"></p>');
       painters.push(function () { quote.textContent = APP.t("photoQuote"); });
       photoWrap.appendChild(quote);
@@ -109,7 +126,6 @@
 
       /* 右：自述 + 爱好 */
       var bio = el('<div class="about-bio"></div>');
-      var paras = (window.SITE.copy.bio && window.SITE.copy.bio[APP.lang]) || [];
       function paintBio() {
         bio.innerHTML = "";
         ((window.SITE.copy.bio || {})[APP.lang] || []).forEach(function (t) {
@@ -122,11 +138,20 @@
       painters.push(paintBio);
       grid.appendChild(bio);
 
-      container.appendChild(grid);
-      new ResizeObserver(function () { stickerLayouts.forEach(function (layout) { layout(); }); }).observe(photoStage);
-      stickerLayouts.forEach(function (layout) { layout(); });
+      playground.appendChild(grid); container.appendChild(playground);
+      var layer = el('<div class="about-sticker-layer"></div>');
+      container.appendChild(layer);
+      (window.DECORATIONS.about || []).forEach(function (s) {
+        var st = el('<div class="about-sticker" data-sticker-id="' + s.id + '"></div>');
+        st.innerHTML = '<img src="' + s.src + '" alt="" draggable="false">';
+        layer.appendChild(st);
+        stickerLayouts.push(makeDraggable(st, layer, frame, bio, s));
+      });
+      function layoutAll() { stickerLayouts.forEach(function (layout) { layout(); }); }
+      var observer = new ResizeObserver(layoutAll);
+      observer.observe(container); observer.observe(frame); observer.observe(bio);
 
-      function paintAll() { painters.forEach(function (f) { f(); }); }
+      function paintAll() { painters.forEach(function (f) { f(); }); layoutAll(); }
       paintAll();
       APP.onLang(paintAll);
     },

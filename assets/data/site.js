@@ -24,14 +24,14 @@ window.SITE = {
     },
     bio: {
       zh: [
-        "你好，我是周昕楠，目前在未来设计学院学习。我的创作围绕视觉设计、交互叙事与影像展开，也在尝试把 AI 和不同的制作工具融入其中。",
-        "我参与过 AI 影视项目的创意、分镜设计、视觉资产与影像制作，也探索过品牌与 IP 的视觉表达。我喜欢有故事的画面，也在意观看或参与的人会产生什么感受。",
-        "最近，我对实体互动装置很感兴趣：把一个心理概念变成奇怪、有趣、可以亲自参与的规则，让观众在选择和体验中，慢慢发现它与自己的关系。"
+        "就读于上海视觉艺术学院艺术与科技专业，创作涉及视觉设计、交互叙事与影像。",
+        "曾参与 AI 影视项目的创意、分镜设计、视觉资产与影像制作，也有品牌与 IP 设计经历。",
+        "关注画面中的故事，以及叙事如何通过空间、物件和互动被体验。实体互动装置的探索围绕心理与人际关系展开，尝试将抽象概念转化为可参与的规则。"
       ],
       en: [
-        "Hi, I’m Xinnan Zhou, a student at the College of Future Design. My work explores visual design, interactive storytelling, and filmmaking. I also experiment with AI and different creative tools.",
-        "I have contributed to concepts, storyboards, visual assets, and production for AI film projects, and explored visual expression for brands and original characters. I enjoy images that tell stories and care about how people feel when they watch or take part.",
-        "Recently, I’ve become interested in physical interactive installations: turning psychological ideas into unusual, playful rules that people can experience through their own choices."
+        "Studying Art and Technology at Shanghai Institute of Visual Arts, with creative work spanning visual design, interactive storytelling, and film.",
+        "Experience in concepts, storyboard design, visual assets, and production for AI film projects, as well as brand and IP design.",
+        "A focus on stories within images and how narrative is experienced through spaces, objects, and interaction. Explorations of physical interactive installations centre on psychology and interpersonal relationships, turning abstract concepts into rules that invite participation."
       ]
     },
     hobbies: {

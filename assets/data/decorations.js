@@ -8,26 +8,27 @@ window.DECORATIONS = {
     play:    { src: "assets/media/cursors/cursor-play-36.png",    hotspot: [18, 17], fallback: "pointer" }
   },
 
-  /* 菜单右侧留白，窄屏隐藏，避开导航与关闭按钮。 */
+  /* 目录固定四张：右侧错落留白，手机采用对应的小尺寸构图。 */
   menu: [
-    { id: "m-cat", src: "assets/media/stickers/sticker-cat-blue-white.png", pos: { top: "18vh", right: "15vw" }, width: "clamp(85px, 8vw, 115px)", rotate: 7, compact: false },
-    { id: "m-vhs", src: "assets/media/stickers/sticker-vhs.png", pos: { top: "44vh", right: "5vw" }, width: "clamp(115px, 11vw, 165px)", rotate: -8, compact: false },
-    { id: "m-poodle", src: "assets/media/stickers/sticker-poodle-grey.png", pos: { bottom: "15vh", right: "12vw" }, width: "clamp(90px, 9vw, 125px)", rotate: -5, compact: false }
+    { id: "m-vhs", src: "assets/media/stickers/sticker-vhs.png", pos: { top: "40vh", right: "5vw" }, width: "clamp(180px, 18vw, 260px)", rotate: -8 },
+    { id: "m-vinyl", src: "assets/media/stickers/sticker-vinyl.png", pos: { top: "18vh", right: "21vw" }, width: "clamp(100px, 11vw, 150px)", rotate: 8 },
+    { id: "m-map", src: "assets/media/stickers/sticker-map.png", pos: { bottom: "13vh", right: "19vw" }, width: "clamp(140px, 15vw, 215px)", rotate: -6 },
+    { id: "m-star", src: "assets/media/stickers/sticker-smiling-star.png", pos: { bottom: "36vh", right: "8vw" }, width: "clamp(55px, 6vw, 80px)", rotate: 12 }
   ],
 
-  /* 个人页：位置相对照片，x/y 分别以照片宽/高为单位，size 是宽度比。
-     手机单独布局；四种动物同时保留。faceFit 使用原图像素坐标校准眼孔，非吸附点。 */
+  /* 个人页：photo 的x/y相对照片；bioBelow的x相对正文宽、y相对照片高。
+     size 为照片宽度比；手机单独布局。faceFit 校准主体与眼孔，非吸附点。 */
   about: [
-    { id: "a-camera", src: "assets/media/stickers/sticker-camera.png", layout: { x: .02, y: .03, size: .34 }, mobile: { x: .03, y: .04, size: .36 }, rotate: -8, draggable: true },
-    { id: "a-ticket", src: "assets/media/stickers/sticker-concert-ticket.png", layout: { x: .53, y: .025, size: .44 }, mobile: { x: .53, y: .03, size: .43 }, rotate: 7, draggable: true },
-    { id: "a-headphones", src: "assets/media/stickers/sticker-headphones.png", layout: { x: .02, y: .74, size: .32 }, mobile: { x: .03, y: .73, size: .34 }, rotate: -9, draggable: true },
-    { id: "a-travel", src: "assets/media/stickers/sticker-travel-tag.png", layout: { x: .75, y: .65, size: .20 }, mobile: { x: .75, y: .64, size: .21 }, rotate: 8, draggable: true },
-    { id: "a-cat", src: "assets/media/stickers/sticker-cat-blue.png", layout: { x: .015, y: 1.05, size: .24 }, mobile: { x: .015, y: 1.04, size: .25 }, rotate: -7, draggable: true },
-    { id: "a-cat-white", src: "assets/media/stickers/sticker-cat-blue-white.png", layout: { x: .285, y: 1.025, size: .235 }, mobile: { x: .29, y: 1.02, size: .24 }, rotate: 6, draggable: true },
-    { id: "a-budgie", src: "assets/media/stickers/sticker-budgie-blue-white.png", layout: { x: .55, y: 1.055, size: .18 }, mobile: { x: .56, y: 1.05, size: .185 }, rotate: -5, draggable: true },
-    { id: "a-poodle", src: "assets/media/stickers/sticker-poodle-grey.png", layout: { x: .735, y: 1.045, size: .25 }, mobile: { x: .74, y: 1.035, size: .25 }, rotate: 5, draggable: true },
-    { id: "a-mask", src: "assets/media/stickers/sticker-mask.png", layout: { x: .075, y: -.22 }, mobile: { x: .08, y: -.235 }, draggable: true,
-      faceFit: { portraitSize: [825, 1100], portraitEyes: [[309, 390], [450, 360]], imageSize: [2172, 724], eyeHoles: [[1056, 400], [1518, 360]] } }
+    { id: "a-camera", src: "assets/media/stickers/sticker-camera.png", layout: { anchor: "photo", x: .02, y: .03, size: .36 }, mobile: { anchor: "photo", x: .01, y: .04, size: .40 }, rotate: -8, draggable: true },
+    { id: "a-ticket", src: "assets/media/stickers/sticker-concert-ticket.png", layout: { anchor: "bioBelow", x: .52, y: .08, size: .48 }, mobile: { anchor: "bioBelow", x: .49, y: .06, size: .52 }, rotate: 7, draggable: true },
+    { id: "a-headphones", src: "assets/media/stickers/sticker-headphones.png", layout: { anchor: "bioBelow", x: .05, y: .06, size: .36 }, mobile: { anchor: "bioBelow", x: .04, y: .10, size: .40 }, rotate: -9, draggable: true },
+    { id: "a-travel", src: "assets/media/stickers/sticker-travel-tag.png", layout: { anchor: "bioBelow", x: .73, y: .38, size: .23 }, mobile: { anchor: "bioBelow", x: .76, y: .28, size: .24 }, rotate: 8, draggable: true },
+    { id: "a-cat", src: "assets/media/stickers/sticker-cat-blue.png", layout: { anchor: "photo", x: .09, y: 1.035, size: .28 }, mobile: { anchor: "photo", x: .09, y: 1.035, size: .30 }, rotate: -7, draggable: true },
+    { id: "a-cat-white", src: "assets/media/stickers/sticker-cat-blue-white.png", layout: { anchor: "bioBelow", x: .08, y: .40, size: .28 }, mobile: { anchor: "bioBelow", x: .02, y: .61, size: .34 }, rotate: 6, draggable: true },
+    { id: "a-budgie", src: "assets/media/stickers/sticker-budgie-blue-white.png", layout: { anchor: "bioBelow", x: .40, y: .55, size: .24 }, mobile: { anchor: "bioBelow", x: .38, y: .54, size: .29 }, rotate: -5, draggable: true },
+    { id: "a-poodle", src: "assets/media/stickers/sticker-poodle-grey.png", layout: { anchor: "bioBelow", x: .65, y: .72, size: .32 }, mobile: { anchor: "bioBelow", x: .68, y: .67, size: .36 }, rotate: 5, draggable: true },
+    { id: "a-mask", src: "assets/media/stickers/sticker-mask.png", layout: { anchor: "photo", x: .035, y: -.29 }, mobile: { anchor: "photo", x: -.035, y: -.31 }, draggable: true,
+      faceFit: { bodyScale: 1.15, portraitSize: [825, 1100], portraitEyes: [[309, 390], [450, 360]], imageSize: [2172, 724], eyeHoles: [[1056, 400], [1518, 360]] } }
   ],
 
   /* 联系页留白中的黑胶唱片，窄屏隐藏。 */

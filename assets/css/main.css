@@ -517,13 +517,16 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
   padding: 4vh 0 5vh;
 }
 .about-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 5vw; align-items: start; }
+.page-about .container { position: relative; }
+.about-playground { position: relative; }
+.about-sticker-layer { position: absolute; inset: 0; overflow: visible; z-index: 50; pointer-events: none; }
 /* 贴纸允许溢出照片边缘，但不能把整页撑出横向滚动条 */
 .page-about { overflow-x: clip; }
 .about-photo { position: relative; }
-.about-photo-stage { position: relative; padding: 36% 0 32%; overflow: visible; isolation: isolate; }
-.about-photo .photo-frame { position: relative; border-radius: 8px; overflow: hidden; background: var(--cream-2); }
+.about-photo-stage { position: relative; padding: 48% 0 34%; overflow: visible; }
+.about-photo .photo-frame { position: relative; width: 100%; margin-left: 2vw; border-radius: 8px; overflow: hidden; background: var(--cream-2); }
 .about-photo .photo-frame img { width: 100%; height: auto; }
-.about-sticker { position: absolute; z-index: 5; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+.about-sticker { position: absolute; z-index: 5; pointer-events: auto; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
 .about-sticker[data-sticker-id="a-mask"] { z-index: 10; }
 .about-sticker:active { cursor: grabbing; }
 .about-sticker img, .about-sticker svg { display: block; width: 100%; height: auto; pointer-events: none; background: transparent; -webkit-user-drag: none; }
@@ -625,9 +628,15 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
   .lightbox button { padding: 8px; font-size: 12px; }
   .lb-footer { padding: 8px; }
   .about-grid { grid-template-columns: 1fr; }
-  .about-photo-stage { padding: 38% 0 33%; }
+  .about-photo-stage { padding: 44% 0 32%; }
+  .about-photo .photo-frame { width: 84%; margin-left: 8%; }
+  .about-playground { padding-bottom: 100%; }
   .sticker-desktop, .contact-spin { display: none; }
   .menu-nav { padding-left: 14vw; }
+  .menu-sticker[data-sticker-id="m-vhs"] { top: 19vh !important; right: 4vw !important; width: 28vw !important; }
+  .menu-sticker[data-sticker-id="m-vinyl"] { top: 12vh !important; right: 35vw !important; width: 18vw !important; }
+  .menu-sticker[data-sticker-id="m-map"] { bottom: 12vh !important; right: 12vw !important; width: 25vw !important; }
+  .menu-sticker[data-sticker-id="m-star"] { bottom: 30vh !important; right: 7vw !important; width: 13vw !important; }
   .contact-wordmark { font-size: 12vw; }
 }
 
