@@ -48,7 +48,7 @@ window.SITE = {
     socials: []   // 例：{ id:"instagram", label:"Instagram", url:"https://..." }
   },
 
-  /* 首页本人提供的封面视频；音轨直接随视频播放，不使用独立BGM。 */
+  /* 首页本人提供的封面视频；使用视频自带音轨，播放有声视频时暂停BGM。 */
   hero: {
     video: "video/封面vedio.mp4",
     poster: "assets/media/video/hero-poster.jpg",
@@ -57,11 +57,15 @@ window.SITE = {
     scrollHint: { zh: "往下翻翻，有点东西 ↓", en: "SCROLL DOWN, THERE’S GOOD STUFF ↓" }
   },
 
-  /* BGM：默认不播放。src 留空 → 隐藏播放按钮。选定后填 mp3 路径。 */
+  /* 本人选定 Lobby Time；本地文件待提供，缺少时控件显示未就绪，不假装播放。 */
   bgm: {
-    src: "",        // 例："assets/media/audio/bgm.mp3"
-    title: { zh: "", en: "" },
-    credit: { zh: "", en: "" }   // 若授权要求署名则填写
+    src: "assets/media/audio/lobby-time.mp3",
+    title: { zh: "Lobby Time", en: "Lobby Time" },
+    volume: 0.15,
+    credit: '"Lobby Time" Kevin MacLeod (incompetech.com)',
+    source: "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600054",
+    license: "CC BY 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0/"
   },
 
   /* 个人照片（旧作品集 PPT 第2页 image2.jpeg） */

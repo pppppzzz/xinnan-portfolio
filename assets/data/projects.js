@@ -60,9 +60,9 @@ window.PROJECTS = [
     themeYears: { zh: "主题年代 1984—1993", en: "Thematic era 1984–1993" },
     types: ["installation", "web"],
     status: "normal",
-    cover: "assets/media/works/caijin/poster-1-prev.jpg",
+    cover: "assets/media/works/caijin/caijin-main.jpg",
     media: [
-      { type: "image", src: "assets/media/works/caijin/poster-1.jpg", prev: "assets/media/works/caijin/poster-1-prev.jpg", nature: { zh: "装置海报", en: "Installation poster" }, caption: { zh: "装置海报 1", en: "Installation poster 1" } },
+      { type: "image", src: "assets/media/works/caijin/caijin-main.jpg", prev: "assets/media/works/caijin/caijin-main.jpg", nature: { zh: "现场实拍", en: "Event photograph" }, caption: { zh: "裁金装置全景", en: "Caijin installation overview" } },
       { type: "image", src: "assets/media/works/caijin/poster-2.jpg", prev: "assets/media/works/caijin/poster-2-prev.jpg", nature: { zh: "装置海报", en: "Installation poster" }, caption: { zh: "装置海报 2", en: "Installation poster 2" } },
       { type: "image", src: "assets/media/works/caijin/poster-3.jpg", prev: "assets/media/works/caijin/poster-3-prev.jpg", nature: { zh: "装置海报", en: "Installation poster" }, caption: { zh: "装置海报 3", en: "Installation poster 3" } },
       { type: "image", src: "assets/media/works/caijin/newspaper-1.jpg", prev: "assets/media/works/caijin/newspaper-1-prev.jpg", nature: { zh: "装置物料·报纸", en: "Installation material · newspaper" }, caption: { zh: "装置报纸设计 1", en: "Installation newspaper 1" }, zoom: true },

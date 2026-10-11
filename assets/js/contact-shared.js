@@ -196,7 +196,7 @@
     }, options);
     scope.addEventListener("click", function (e) {
       if ((e.pointerType !== "touch" && fine.matches) || !e.detail || !enabled()) return;
-      if (e.target.closest("a,button,input,textarea,select,label,[role='button'],[contenteditable],.topbar,.menu,.contact-list,.contact-title,.contact-wordmark,.footer")) return;
+      if (e.target.closest("a,button,summary,input,textarea,select,label,[role='button'],[contenteditable],.bgm-tools,.topbar,.menu,.contact-list,.contact-title,.contact-wordmark,.footer")) return;
       emit(e.clientX, e.clientY, random(-25, 25));
       if (Math.random() < .5) emit(e.clientX + random(-16, 16), e.clientY + random(-8, 8), random(-25, 25));
     }, options);

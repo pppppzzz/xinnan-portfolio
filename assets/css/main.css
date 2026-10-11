@@ -644,6 +644,20 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 }
 .bgm-btn:hover { background: var(--purple); transform: translateY(-2px); }
 .bgm-btn .bgm-icon { font-size: 15px; }
+.bgm-tools { position: fixed; right: 22px; bottom: 22px; z-index: 2500; display: flex; align-items: center; gap: 6px; max-width: calc(100vw - 32px); }
+.bgm-tools .bgm-btn { position: static; min-height: 44px; padding: 10px 12px; letter-spacing: 0; }
+.bgm-status { font-size: 10px; font-weight: 400; opacity: .75; }
+.bgm-tools .bgm-icon { flex: 0 0 24px; width: 24px; height: 24px; border-radius: 50%; background: repeating-radial-gradient(circle, var(--black) 0 2px, #626765 3px 4px); position: relative; animation: bgm-disc 12s linear infinite; animation-play-state: paused; }
+.bgm-icon::after { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: var(--yellow); border: 2px solid var(--purple); }
+.bgm-icon::before { content: ''; position: absolute; left: 6px; top: 4px; width: 3px; height: 6px; border-radius: 50%; background: var(--cream); opacity: .45; transform: rotate(35deg); }
+.bgm-btn.is-playing .bgm-icon { animation-play-state: running; }
+@keyframes bgm-disc { to { transform: rotate(360deg); } }
+.bgm-credit summary { list-style: none; cursor: pointer; min-width: 28px; min-height: 44px; display: grid; place-items: center; background: var(--black); color: var(--cream); border-radius: 16px; }
+.bgm-credit summary::-webkit-details-marker { display: none; }
+.bgm-credit > div { position: absolute; right: 0; bottom: calc(100% + 10px); width: min(300px, calc(100vw - 44px)); padding: 16px; border-radius: 6px; background: var(--black); color: var(--cream); font-size: 12px; line-height: 1.6; }
+.bgm-credit a { text-decoration: underline; text-underline-offset: 3px; }
+.bgm-credit summary:focus-visible { outline: 3px solid var(--purple); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .bgm-tools .bgm-icon { animation: none; } }
 
 /* --------------------------------------------------------------------------
    响应式
@@ -659,7 +673,6 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
   .tape { min-width: 56px; }
   .tape.is-open { width: 92vw; height: 78vh; }
   .tape-preview { display: none; }   /* 触屏无 hover，隐藏浮动预览避免被滚动裁切 */
-  .work-tape-preview { display: none; }
   .tape-face { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, .8fr); gap: 12px; padding: 14px 12px; }
   .tape-stills { max-height: 140px; }
   .tape-info .info-title { padding-right: 30px; }
@@ -710,6 +723,12 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 /* Only the English name is measured to fit; preserve the Chinese wordmark. */
 .contact-wordmark.is-english { min-width: 0; padding-left: 2px; padding-right: 2px; }
 .contact-wordmark.is-english .contact-name { display: inline-block; }
+
+@media (hover: none) and (pointer: coarse) {
+  .work-tape-preview:not(.is-keyboard) { display: none; }
+}
+.tape-media .media-frame.is-main-photo { display: flex; align-items: center; justify-content: center; }
+.tape-media .is-main-photo img { position: static; width: auto; height: auto; max-width: 100%; max-height: 100%; }
 
 /* A cramped contact row must not scroll the clipped parent when its copy button gains focus. */
 .contact-list { container-type: inline-size; }

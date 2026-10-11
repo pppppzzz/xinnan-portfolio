@@ -253,34 +253,124 @@
     }
   }
 
-  /* ---------------- BGM 播放器（src 留空则不显示；默认不自动播放） ---------------- */
+  /* ---------------- 单一 BGM：手动开启、跨页续播、有声视频优先 ---------------- */
   function buildBgm() {
     var cfg = window.SITE.bgm;
     if (!cfg || !cfg.src) return;
-    var audio = new Audio(cfg.src);
-    audio.loop = true;
-    audio.preload = "none";
-
-    var btn = document.createElement("button");
-    btn.className = "bgm-btn";
-    btn.innerHTML = '<span class="bgm-icon">&#9835;</span><span class="bgm-label"></span>';
-    document.body.appendChild(btn);
-
-    function paint() {
-      btn.querySelector(".bgm-label").textContent =
-        (audio.paused ? APP.t("bgmPlay") : APP.t("bgmPause")) +
-        (cfg.title && APP.L(cfg.title) ? " · " + APP.L(cfg.title) : "");
-      btn.title = (cfg.credit && APP.L(cfg.credit)) ? APP.L(cfg.credit) : "";
-      btn.setAttribute("data-cursor", audio.paused ? "play" : "link");
+    var key = 'zn_bgm_lobby_v1', saved = null;
+    try { saved = JSON.parse(sessionStorage.getItem(key)); } catch (e) {}
+    var wanted = !!(saved && saved.on), seeking = saved && Number(saved.time) || 0;
+    var audio = document.createElement('audio');
+    audio.id = 'bgm-audio'; audio.src = cfg.src; audio.loop = true; audio.preload = 'none';
+    audio.hidden = true; audio.volume = 0; document.body.appendChild(audio);
+    var targetVolume = Math.max(0, Math.min(1, Number(cfg.volume) || .15));
+    var fade = 0, request = 0, leaving = false, loading = false, unavailable = false, blocked = false;
+    var pending = false, lastSave = 0;
+    var tools = document.createElement('div'); tools.className = 'bgm-tools';
+    tools.innerHTML = '<button class="bgm-btn" type="button"><span class="bgm-icon" aria-hidden="true"></span><span class="bgm-label"></span><span class="bgm-status" aria-live="polite"></span></button>' +
+      '<details class="bgm-credit"><summary>ⓘ</summary><div><a class="music-source" target="_blank" rel="noopener"></a><br><a class="music-license" target="_blank" rel="noopener"></a></div></details>';
+    document.body.appendChild(tools);
+    var btn = tools.querySelector('button'), status = tools.querySelector('.bgm-status');
+    var source = tools.querySelector('.music-source'), license = tools.querySelector('.music-license');
+    source.textContent = cfg.credit; source.href = cfg.source;
+    license.textContent = 'Licensed under Creative Commons: By Attribution 4.0 License'; license.href = cfg.licenseUrl;
+    function audibleVideo() {
+      return Array.from(document.querySelectorAll('video')).some(function (v) {
+        return !v.paused && !v.ended && !v.muted && v.volume > 0;
+      });
     }
-    paint();
-    APP.onLang(paint);
-
-    btn.addEventListener("click", function () {
-      if (audio.paused) audio.play(); else audio.pause();
+    function persist() {
+      try { sessionStorage.setItem(key, JSON.stringify({on:wanted, time:audio.readyState ? audio.currentTime : seeking})); } catch (e) {}
+    }
+    function cancelFade() { cancelAnimationFrame(fade); fade = 0; }
+    function fadeTo(volume, done) {
+      cancelFade();
+      var from = audio.volume, start = performance.now();
+      function tick(now) {
+        // The first frame's timestamp can precede performance.now() by a fraction.
+        var p = Math.max(0, Math.min(1, (now-start)/350));
+        audio.volume = from + (volume-from)*p;
+        if (p < 1) fade = requestAnimationFrame(tick);
+        else { fade = 0; if (done) done(); }
+      }
+      fade = requestAnimationFrame(tick);
+    }
+    function stopNow() {
+      request++; pending = loading = false; cancelFade(); audio.pause(); audio.volume = 0;
+    }
+    function paint() {
+      var playing = !audio.paused && !audio.ended && !loading;
+      var state = unavailable ? 'bgmMissing' : wanted && audibleVideo() ? 'bgmVideo' : blocked ? 'bgmResume' : loading ? 'bgmLoading' : playing ? 'bgmPlaying' : 'bgmOff';
+      btn.querySelector('.bgm-label').textContent = APP.t('bgmPrompt');
+      status.textContent = APP.t(state); btn.dataset.state = state;
+      btn.classList.toggle('is-playing', playing);
+      btn.setAttribute('aria-pressed', String(playing));
+      btn.setAttribute('aria-label', APP.t(wanted && !blocked ? 'bgmPause' : 'bgmPlay') + ' · Lobby Time · ' + APP.t(state));
+      btn.setAttribute('data-cursor', playing ? 'link' : 'play');
+      btn.title = APP.t(state);
+      tools.querySelector('summary').setAttribute('aria-label', APP.t('bgmCredit'));
+    }
+    function fail(error) {
+      if (leaving || !wanted) return;
+      loading = pending = false;
+      if (error && error.name === 'NotAllowedError') blocked = true;
+      else { unavailable = true; wanted = false; }
+      persist(); paint();
+    }
+    function start() {
+      if (!wanted || leaving || audibleVideo() || pending) { paint(); return; }
+      if (!audio.paused) { fadeTo(targetVolume); paint(); return; }
+      if (audio.error) audio.load();
+      unavailable = blocked = false; loading = pending = true; audio.volume = 0;
+      var token = ++request; paint();
+      audio.play().then(function () {
+        if (token !== request || !wanted || leaving || audibleVideo()) { if (token === request) stopNow(); return; }
+        pending = loading = false; blocked = false; fadeTo(targetVolume); persist(); paint();
+      }).catch(function (e) { if (token === request) fail(e); });
+    }
+    btn.addEventListener('click', function () {
+      if (wanted && !blocked) {
+        wanted = false; request++; pending = loading = false; blocked = false; persist();
+        fadeTo(0, function () { audio.pause(); paint(); }); paint();
+      } else { wanted = true; persist(); start(); }
     });
-    audio.addEventListener("play", paint);
-    audio.addEventListener("pause", paint);
+    audio.addEventListener('loadedmetadata', function () {
+      if (seeking && isFinite(audio.duration)) audio.currentTime = seeking % audio.duration;
+      seeking = 0;
+    });
+    audio.addEventListener('error', function () { fail(audio.error); });
+    audio.addEventListener('playing', function () {
+      if (!wanted || leaving || audibleVideo()) stopNow();
+      else { loading = false; paint(); }
+    });
+    audio.addEventListener('pause', paint);
+    audio.addEventListener('timeupdate', function () { if (performance.now()-lastSave > 1000) { persist(); lastSave = performance.now(); } });
+    function syncVideo() {
+      if (audibleVideo()) { stopNow(); paint(); }
+      else if (wanted) start();
+      else paint();
+    }
+    ['play','playing','pause','ended','volumechange','emptied','error'].forEach(function (event) {
+      document.addEventListener(event, function (e) { if (e.target.tagName === 'VIDEO') syncVideo(); }, true);
+    });
+    // Also catch closing/removing a video without a final media event.
+    var videos = new Set(document.querySelectorAll('video'));
+    var observer = new MutationObserver(function () {
+      var next = new Set(document.querySelectorAll('video'));
+      if (next.size !== videos.size || Array.from(next).some(function (v) { return !videos.has(v); })) { videos = next; syncVideo(); }
+    });
+    observer.observe(document.querySelector('#page'), {childList:true, subtree:true});
+    window.addEventListener('pagehide', function () { persist(); leaving = true; stopNow(); observer.disconnect(); });
+    window.addEventListener('pageshow', function (e) {
+      if (!e.persisted) return;
+      leaving = false; observer.observe(document.querySelector('#page'), {childList:true, subtree:true}); syncVideo();
+    });
+    APP.onLang(paint); paint();
+    // Check the configured local file without autoplay or downloading a substitute.
+    fetch(cfg.src, {method:'HEAD', cache:'no-store'}).then(function (r) {
+      if (!r.ok && audio.paused && !pending) { unavailable = true; wanted = false; persist(); paint(); }
+    }).catch(function () { /* A real play attempt reports network/decoding failures. */ });
+    if (wanted) start(); // Prior explicit opt-in only; browsers may require a new click.
   }
 
   /* ---------------- 页脚 ---------------- */

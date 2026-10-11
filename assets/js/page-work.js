@@ -10,14 +10,14 @@
   var tapes = [];   // { project, el, refs, paint }
   var viewer = { rec: null, scale: 1, x: 0, y: 0, width: 0, height: 0, pointers: new Map(), gesture: null, focus: null };
   var lightboxStage;
-  var hoverPreview, hoverPoint = null, rowObserver, rowController;
+  var hoverPreview, hoverPoint = null, focusTape = null, rowObserver, rowController;
 
   function hidePreview() { if (hoverPreview) hoverPreview.classList.remove("is-visible"); }
   function updatePreview() {
-    if (!hoverPoint || !rowEl || matchMedia("(max-width: 900px)").matches) { hidePreview(); return; }
+    if ((!hoverPoint && !focusTape) || !rowEl) { hidePreview(); return; }
     // Scrolling can put a different bookmark (or a gap) below a stationary pointer.
-    var hit = document.elementFromPoint(hoverPoint.x, hoverPoint.y);
-    var tape = hit && hit.closest(".tape");
+    var hit = hoverPoint && document.elementFromPoint(hoverPoint.x, hoverPoint.y);
+    var tape = focusTape || (hit && hit.closest(".tape"));
     var rec = tape && tapes.find(function (t) { return t.el === tape; });
     if (!rec || tape.classList.contains("is-open")) { hidePreview(); return; }
     var r = tape.getBoundingClientRect(), area = rowEl.getBoundingClientRect();
@@ -25,8 +25,9 @@
     var image = hoverPreview.querySelector("img");
     if (image.getAttribute("src") !== rec.project.cover) image.src = rec.project.cover;
     image.alt = APP.L(rec.project.title);
-    hoverPreview.style.left = clamp((r.left + r.right) / 2 - 100, 8, innerWidth - 208) + "px";
-    hoverPreview.style.top = Math.max(70, r.top - 140) + "px";
+    hoverPreview.classList.toggle("is-keyboard", !!focusTape);
+    hoverPreview.style.left = clamp((r.left + r.right) / 2 - 100, 8, Math.max(8, innerWidth - 208)) + "px";
+    hoverPreview.style.top = clamp(r.top - 140, 70, Math.max(70, innerHeight - 136)) + "px";
     hoverPreview.classList.add("is-visible");
   }
   function bindRowScroll() {
@@ -47,12 +48,18 @@
     }, { signal: rowController.signal, passive: false });
     function trackPointer(e) {
       if (e.pointerType !== "mouse") return;
-      hoverPoint = { x: e.clientX, y: e.clientY }; updatePreview();
+      focusTape = null; hoverPoint = { x: e.clientX, y: e.clientY }; updatePreview();
     }
     rowEl.addEventListener("pointerenter", trackPointer, options);
     rowEl.addEventListener("pointermove", trackPointer, options);
-    rowEl.addEventListener("pointerleave", function () { hoverPoint = null; hidePreview(); }, options);
+    rowEl.addEventListener("pointerleave", function () { hoverPoint = null; focusTape = null; hidePreview(); }, options);
+    rowEl.addEventListener("focusin", function (e) {
+      if (!e.target.matches(".tape-spine:focus-visible")) return;
+      hoverPoint = null; focusTape = e.target.closest(".tape"); updatePreview();
+    }, options);
+    rowEl.addEventListener("focusout", function () { focusTape = null; hidePreview(); }, options);
     rowEl.addEventListener("scroll", updatePreview, options);
+    rowEl.addEventListener("transitionend", function (e) { if (e.target.classList.contains('tape')) updatePreview(); }, options);
     rowObserver = new ResizeObserver(updatePreview);
     rowObserver.observe(rowEl);
     tapes.forEach(function (t) { rowObserver.observe(t.el); });
@@ -400,10 +407,17 @@
       e.stopPropagation();
       if (el.classList.contains("is-open")) closeTape(rec); else openTape(rec);
     });
+    var spineButton = el.querySelector(".tape-spine");
+    spineButton.tabIndex = 0; spineButton.setAttribute("role", "button");
+    spineButton.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); spineButton.click(); }
+    });
     el.querySelector(".tape-face").addEventListener("click", function (e) { e.stopPropagation(); });
 
     rec.paint = function () {
       refs.spine.textContent = APP.L(project.title);
+      spineButton.setAttribute("aria-label", APP.L(project.title));
+      spineButton.setAttribute("aria-expanded", String(el.classList.contains("is-open")));
       refs.title.textContent = APP.L(project.title);
       refs.role.textContent = APP.L(project.role);
       refs.production.hidden = project.productionStatus !== "produced";
@@ -445,6 +459,7 @@
     if (opened) rec.el.removeAttribute("data-cursor"); else rec.el.setAttribute("data-cursor", "tape");
     rec.el.setAttribute("data-cursor-label", APP.t("expandHint"));
     var spine = rec.el.querySelector(".tape-spine");
+    spine.setAttribute("aria-expanded", String(opened));
     spine.setAttribute("data-cursor", "tape");
     spine.setAttribute("data-cursor-label", APP.t(opened ? "collapseHint" : "expandHint"));
     rec.el.querySelector(".tape-close").setAttribute("aria-label", APP.t("collapseHint"));
@@ -476,6 +491,7 @@
     if (rec.video) rec.video.pause();
     frame.innerHTML = "";
     frame.dataset.mediaIndex = rec.mediaIndex;
+    frame.classList.toggle("is-main-photo", rec.project.id === "caijin" && rec.mediaIndex === 0);
     rec.video = null;
     if (!m) return;
 
@@ -535,6 +551,7 @@
 
   /* ---------------- 展开 / 收起 ---------------- */
   function openTape(rec) {
+    hidePreview();
     tapes.forEach(function (t) { t.el.classList.remove("is-open"); if (t.video) t.video.pause(); paintTapeCursor(t); });
     rec.el.classList.add("is-open");
     paintTapeCursor(rec);
@@ -559,7 +576,7 @@
   function renderRow() {
     if (rowController) rowController.abort();
     if (rowObserver) rowObserver.disconnect();
-    hoverPoint = null; hidePreview();
+    hoverPoint = null; focusTape = null; hidePreview();
     tapes.forEach(function (t) { if (t.video) t.video.pause(); });
     if (rowEl) rowEl.remove();
     tapes = [];
@@ -613,6 +630,7 @@
       APP.onLang(function () {
         head.textContent = APP.t("workTitle");
         tapes.forEach(function (t) { t.paint(); });
+        updatePreview();
       });
       head.textContent = APP.t("workTitle");
     },
