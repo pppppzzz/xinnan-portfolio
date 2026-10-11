@@ -58,6 +58,28 @@
     return { node:list, destroy:function () { disposers.forEach(function (f) { f(); }); } };
   }
 
+  // Both entry points use the original contact page composition and style classes.
+  function mountContact(container, painters, options) {
+    options = options || {};
+    var wrap = el('<div class="contact-wrap container"></div>');
+    var title = document.createElement(options.titleTag || 'h1');
+    title.className = 'contact-title display';
+    if (options.titleId) title.id = options.titleId;
+    painters.push(function () { title.textContent = APP.t('contactTitle'); });
+    wrap.appendChild(title);
+    var spin = el('<div class="contact-spin"><img alt=""></div>');
+    spin.querySelector('img').src = DECORATIONS.contact[0].src;
+    wrap.appendChild(spin);
+    var contacts = buildContactList(painters);
+    wrap.appendChild(contacts.node);
+    var mark = el('<div class="contact-wordmark display"></div>');
+    painters.push(function () { mark.textContent = APP.L(SITE.brand); });
+    wrap.appendChild(mark);
+    container.appendChild(wrap);
+    container.appendChild(el('<div class="contact-stripes"><i></i><i></i><i></i></div>'));
+    return contacts;
+  }
+
   /* Only moving pointers or blank-area touch taps emit stickers; no emission timer. */
   function initStickerRain(scope) {
     scope = scope || document;
@@ -149,7 +171,7 @@
     }, options);
     scope.addEventListener("click", function (e) {
       if ((e.pointerType !== "touch" && fine.matches) || !e.detail || !enabled()) return;
-      if (e.target.closest("a,button,input,textarea,select,label,[role='button'],[contenteditable],.topbar,.menu,.contact-list,.contact-title,.contact-wordmark,.home-contact-title,.home-contact-intro,.footer")) return;
+      if (e.target.closest("a,button,input,textarea,select,label,[role='button'],[contenteditable],.topbar,.menu,.contact-list,.contact-title,.contact-wordmark,.footer")) return;
       emit(e.clientX, e.clientY, random(-25, 25));
       if (Math.random() < .5) emit(e.clientX + random(-16, 16), e.clientY + random(-8, 8), random(-25, 25));
     }, options);
@@ -171,5 +193,5 @@
     return destroy;
   }
 
-  window.CONTACT = { buildList:buildContactList, initRain:initStickerRain };
+  window.CONTACT = { mount:mountContact, initRain:initStickerRain };
 })();

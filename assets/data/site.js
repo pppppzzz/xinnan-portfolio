@@ -57,18 +57,6 @@ window.SITE = {
     scrollHint: { zh: "往下翻翻，有点东西 ↓", en: "SCROLL DOWN, THERE’S GOOD STUFF ↓" }
   },
 
-  /* 首页后续入口；标题/封面/分类由原项目记录读取，勿在此重复项目事实。 */
-  home: {
-    featuredIds: ["caijin", "four-am", "ja-ip"],
-    featuredTitle: { zh: "精选作品", en: "SELECTED WORK" },
-    allWork: { zh: "看看全部作品 →", en: "SEE ALL WORK →" },
-    aboutTitle: { zh: "顺便认识一下嘛", en: "LET’S GET ACQUAINTED" },
-    aboutDescription: { zh: "音乐、追星、旅行、摄影、跳舞、cosplay、养小动物。", en: "Music, fandom, travel, photography, dance, cosplay, and caring for little animals." },
-    aboutLink: { zh: "认识一下 →", en: "A LITTLE ABOUT ME →" },
-    contactTitle: { zh: "来聊聊", en: "LET’S TALK" },
-    contactDescription: { zh: "聊作品，聊想法，聊点别的也行。", en: "Projects, ideas, or whatever’s on your mind." }
-  },
-
   /* BGM：默认不播放。src 留空 → 隐藏播放按钮。选定后填 mp3 路径。 */
   bgm: {
     src: "",        // 例："assets/media/audio/bgm.mp3"

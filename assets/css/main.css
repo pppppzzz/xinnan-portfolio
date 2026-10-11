@@ -516,89 +516,6 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 
 .home-section { padding: 7vh 0; }
 
-/* Homepage continuation: visible tape faces, an airy about link, then a dark ending. */
-.home-section-head { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
-.home-section-head .section-label { flex: 1; }
-.home-link { min-height: 44px; display: inline-block; padding: 10px 0; border-bottom: 1px solid currentColor; font-size: 14px; font-weight: 650; }
-.home-link:hover { color: var(--purple); }
-.home-featured { padding: 64px 0 54px; }
-.home-featured-row { padding: 42px 12px 30px; gap: 4%; min-height: 0; align-items: flex-start; }
-.home-feature-item { flex: 1 1 0; min-width: 0; }
-.home-feature-item:nth-child(2) { margin-top: 34px; }
-.home-feature-item:nth-child(3) { margin-top: 12px; }
-.home-featured-row.will-reveal .home-feature-item { opacity: 0; transform: translateY(18px); transition: opacity .5s ease var(--enter-delay), transform .5s var(--ease) var(--enter-delay); }
-.home-featured-row.will-reveal .home-feature-item.is-visible, .home-featured-row.will-reveal .home-feature-item:focus-within { opacity: 1; transform: none; }
-.home-tape { display: block; width: 100%; height: auto; min-width: 0; padding-left: 38px; transform: rotate(var(--tape-angle)); transition: transform .22s var(--ease); }
-.home-tape:hover, .home-tape:focus-visible { transform: translateY(-6px) rotate(0deg); }
-.home-tape .tape-spine { width: 38px; }
-.home-tape .spine-title { font-size: 12px; }
-.home-tape-face { background: var(--cream-2); color: var(--black); border: 4px solid var(--black); border-left: 0; border-radius: 0 6px 6px 0; padding: 16px 14px 18px; }
-.home-tape-cover { height: clamp(185px, 19vw, 270px); position: relative; }
-.home-tape-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-.home-tape-label { border-top: 1px solid var(--black); margin-top: 16px; padding-top: 12px; min-height: 88px; }
-.home-tape-title { font-size: clamp(18px, 1.7vw, 25px); line-height: 1.25; font-weight: 750; }
-.home-tape-category { margin-top: 8px; font-size: 12px; line-height: 1.5; opacity: .75; }
-.home-about { position: relative; padding: 74px 0 96px; }
-.home-about-copy { margin-left: 11%; max-width: 73%; }
-.home-about h2 { color: var(--purple); font-size: clamp(34px, 4.7vw, 68px); line-height: 1.15; letter-spacing: -.035em; }
-.home-about-description { font-size: clamp(15px, 1.5vw, 20px); max-width: 690px; line-height: 1.8; margin: 28px 0 22px 28px; }
-.home-about .home-link { margin-left: 28px; }
-.home-about-bird { position: absolute; right: 0; bottom: 55px; width: clamp(110px, 12vw, 170px); height: auto; transform: rotate(9deg); pointer-events: none; }
-.home-contact { background: var(--charcoal); color: var(--cream); padding: 74px 0 0; }
-.home-contact-inner { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); column-gap: 6%; align-items: start; padding-bottom: 40px; }
-.home-contact-title { font-size: clamp(64px, 9vw, 126px); line-height: 1.05; padding-left: 24px; letter-spacing: -.045em; }
-.home-contact-intro { grid-column: 1; font-size: clamp(15px, 1.5vw, 20px); margin: 24px 0 0 48px; max-width: 400px; }
-.home-contact .contact-list { grid-column: 2; grid-row: 1 / span 2; margin: 55px 0 40px; gap: 22px; }
-.home-contact .contact-row { position: relative; gap: 12px; padding-bottom: 24px; font-size: clamp(18px, 2vw, 27px); }
-.home-contact .contact-row a { min-width: 0; overflow-wrap: anywhere; }
-.home-contact .contact-row .c-icon { border-width: 1px; }
-.home-contact .contact-copy { color: #b8d4a3; border-color: #b8d4a3; }
-.home-contact .contact-copy:hover { background: var(--purple); color: var(--cream); }
-.home-contact .contact-row .copied-flag { top: calc(100% - 18px); left: 56px; color: #b8d4a3; }
-.home-contact .footer { padding-top: 24px; padding-bottom: 32px; opacity: .8; }
-.home-english .home-contact-title { font-size: clamp(55px, 7vw, 102px); }
-@media (max-width: 900px) {
-  .home-featured-row { gap: 3%; padding-left: 7px; padding-right: 7px; }
-  .home-tape { padding-left: 30px; }
-  .home-tape .tape-spine { width: 30px; }
-  .home-tape-face { padding: 12px 10px; }
-  .home-tape-label { min-height: 110px; }
-  .home-contact-inner { column-gap: 3%; }
-  .home-contact-title, .home-contact-intro { padding-left: 0; margin-left: 0; }
-  .home-contact .contact-row { font-size: 18px; gap: 8px; }
-}
-@media (max-width: 650px) {
-  .home-featured { padding: 44px 0 28px; }
-  .home-section-head { align-items: flex-start; gap: 14px; }
-  .home-section-head .section-label { margin-top: 13px; }
-  .home-link { font-size: 12px; }
-  .home-featured-row { display: flex; flex-direction: column; gap: 28px; padding: 28px 12px 16px; }
-  .home-feature-item { width: 100%; margin-top: 0 !important; }
-  .home-tape { transform: none; padding-left: 34px; }
-  .home-tape .tape-spine { width: 34px; }
-  .home-tape-cover { height: 220px; }
-  .home-tape-label { min-height: 70px; }
-  .home-about { padding: 52px 0 60px; }
-  .home-about-copy { margin-left: 3%; max-width: 84%; }
-  .home-about h2 { font-size: 34px; }
-  .home-about-description { margin: 20px 0 18px 10px; font-size: 15px; max-width: 88%; }
-  .home-about .home-link { margin-left: 10px; }
-  .home-about-bird { width: 100px; bottom: 26px; right: -8px; }
-  .home-contact { padding: 48px 0 0; }
-  .home-contact-inner { display: block; padding-bottom: 12px; }
-  .home-contact-title { padding-left: 4%; font-size: 76px; }
-  .home-contact-intro { margin: 20px 0 0 8%; max-width: 85%; }
-  .home-contact .contact-list { margin: 32px 0 12px 2%; }
-  .home-contact .contact-row { font-size: 18px; gap: 10px; }
-  .home-contact .footer { font-size: 11px; gap: 12px; }
-  .home-english .home-contact-title { font-size: 62px; }
-  .home-english .home-about h2 { font-size: 30px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .home-featured-row.will-reveal .home-feature-item { opacity: 1; transform: none; transition: none; }
-  .home-tape { transition: none; }
-}
-
 /* 下拉列表（EXPERTISES / CLIENTS） */
 .drop-list { border-top: 2px solid var(--black); }
 .drop-item { border-bottom: 2px solid var(--black); }
@@ -683,11 +600,6 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 .contact-row .copied-flag { font-size: 13px; font-style: italic; color: var(--yellow); opacity: 0; transition: opacity .25s; }
 .contact-row .copied-flag.is-show { opacity: 1; }
 
-/* Shared copy feedback stays below the value, never widening a contact row. */
-.contact-row { position: relative; }
-.contact-row .copied-flag { position: absolute; left: 60px; top: calc(100% + 4px); max-width: calc(100% - 60px); font-style: normal; line-height: 1.4; }
-.contact-row.is-copy-failed { margin-bottom: 28px; }
-
 .contact-spin { position: absolute; top: 8vh; right: 6vw; width: clamp(90px, 9vw, 130px); pointer-events: none; }
 .contact-spin img, .contact-spin svg { width: 100%; height: auto; animation: spin 14s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -771,3 +683,6 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 @media (prefers-reduced-motion: reduce) {
   .contact-spin img { animation: none; }
 }
+
+/* Embed the original contact page body after the restored home content. */
+.home-contact-page { padding-top: 96px; min-height: 100vh; }
