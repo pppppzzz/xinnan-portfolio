@@ -48,10 +48,10 @@ window.SITE = {
     socials: []   // 例：{ id:"instagram", label:"Instagram", url:"https://..." }
   },
 
-  /* 首页视频：留空 → 显示中性占位；填入路径即启用。勿用项目视频或参考站视频填充。 */
+  /* 首页本人提供的封面视频；音轨直接随视频播放，不使用独立BGM。 */
   hero: {
-    video: "",      // 例："assets/media/video/hero.mp4"
-    poster: ""      // 例："assets/media/video/hero-poster.jpg"
+    video: "video/封面vedio.mp4",
+    poster: "assets/media/video/hero-poster.jpg"
   },
 
   /* BGM：默认不播放。src 留空 → 隐藏播放按钮。选定后填 mp3 路径。 */

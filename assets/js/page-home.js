@@ -26,6 +26,58 @@
     return item;
   }
 
+  var stopHero = function () {};
+  function buildHeroVideo(hero, painters) {
+    var v = el('<video muted playsinline preload="auto"></video>');
+    v.defaultMuted = true; v.muted = true; v.playsInline = true; v.loop = false;
+    v.setAttribute("aria-label", APP.L(window.SITE.brand));
+    if (window.SITE.hero.poster) {
+      v.poster = window.SITE.hero.poster;
+      var poster = el('<img class="hero-poster" alt="">');
+      poster.src = v.poster; hero.appendChild(poster);
+    }
+    var hasPlayed = false;
+    hero.classList.add("has-video", "show-poster");
+    hero.appendChild(v);
+    var controls = el('<div class="hero-controls"><button class="hero-play" type="button"></button><button class="hero-sound" type="button" aria-pressed="false"></button></div>');
+    var play = controls.querySelector(".hero-play"), sound = controls.querySelector(".hero-sound");
+    hero.appendChild(controls);
+    function paintVideo() {
+      play.textContent = APP.t(v.ended ? "heroReplay" : v.paused ? "play" : "pause");
+      play.setAttribute("aria-label", play.textContent);
+      play.setAttribute("data-cursor", v.paused || v.ended ? "play" : "link");
+      sound.textContent = APP.t(v.muted ? "heroSoundOff" : "heroSoundOn");
+      sound.setAttribute("aria-label", APP.t(v.muted ? "heroEnableSound" : "heroDisableSound"));
+      sound.setAttribute("aria-pressed", String(!v.muted));
+      v.setAttribute("aria-label", APP.L(window.SITE.brand));
+      hero.classList.toggle("show-poster", !hasPlayed);
+    }
+    function tryPlay() {
+      // Muted playback may still be denied (e.g. power saving); retain poster + explicit play.
+      var promise = v.play();
+      if (promise) promise.catch(function () { paintVideo(); });
+    }
+    play.addEventListener("click", function () {
+      if (v.error) { hasPlayed = false; v.load(); }
+      if (v.ended) v.currentTime = 0;
+      if (v.paused) tryPlay(); else v.pause();
+    });
+    sound.addEventListener("click", function () {
+      v.muted = !v.muted;
+      if (!v.muted && v.paused && !v.ended) tryPlay();
+      paintVideo();
+    });
+    v.addEventListener("playing", function () { hasPlayed = true; paintVideo(); });
+    ["pause", "ended", "volumechange", "error"].forEach(function (name) { v.addEventListener(name, paintVideo); });
+    stopHero = function () { v.pause(); };
+    window.addEventListener("pagehide", stopHero);
+    document.addEventListener("visibilitychange", function () { if (document.hidden) stopHero(); });
+    painters.push(paintVideo);
+    v.src = window.SITE.hero.video;
+    paintVideo();
+    tryPlay(); // One automatic attempt, never a retry loop or repeat after ended.
+  }
+
   window.PAGE = {
     id: "home",
     init: function () {
@@ -35,10 +87,7 @@
       /* ---- hero ---- */
       var hero = el('<section class="hero"></section>');
       if (window.SITE.hero && window.SITE.hero.video) {
-        var v = el('<video autoplay muted loop playsinline></video>');
-        v.src = window.SITE.hero.video;
-        if (window.SITE.hero.poster) v.poster = window.SITE.hero.poster;
-        hero.appendChild(v);
+        buildHeroVideo(hero, painters);
       } else {
         hero.appendChild(el('<div class="hero-placeholder"><span></span></div>'));
         painters.push(function () {
@@ -144,6 +193,7 @@
       APP.onLang(paintAll);
       addEventListener("resize", syncDrops);
     },
-    renderLang: function () {}
+    renderLang: function () {},
+    destroy: function () { stopHero(); }
   };
 })();
