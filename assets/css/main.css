@@ -271,6 +271,20 @@ body.has-cursor .video-play:not(.is-playing), body.has-cursor [data-cursor="play
 .tape.is-open { width: min(80vw, 1180px); margin-top: 0; z-index: 320; flex-shrink: 0; }
 .vhs-row.has-open .tape:not(.is-open) { width: calc(var(--spine-w) * .72); opacity: .55; }
 
+/* 作品书签保留实际宽度，只在本列表内部溢出；首页保持原有排列。 */
+.page-work .vhs-row { overflow-x: auto; overflow-y: hidden; scroll-behavior: auto; scrollbar-width: thin; }
+.page-work .tape { flex: 0 0 auto; min-width: 72px; }
+.page-work .tape-preview { display: none; }
+.work-tape-preview {
+  position: fixed; width: 200px; height: 128px; z-index: 400;
+  border-radius: 4px; overflow: hidden; pointer-events: none;
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+  opacity: 0; visibility: hidden; transform: translateY(8px) scale(.9);
+  transition: opacity .25s var(--ease), transform .25s var(--ease), visibility .25s;
+}
+.work-tape-preview.is-visible { opacity: 1; visibility: visible; transform: none; }
+.work-tape-preview img { width: 100%; height: 100%; object-fit: contain; background: var(--cream-2); }
+
 /* 脊背（竖排标题） */
 .tape-spine {
   position: absolute; inset: 0 auto 0 0;
@@ -523,7 +537,7 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 /* 贴纸允许溢出照片边缘，但不能把整页撑出横向滚动条 */
 .page-about { overflow-x: clip; }
 .about-photo { position: relative; }
-.about-photo-stage { position: relative; padding: 35% 0 16%; overflow: visible; }
+.about-photo-stage { position: relative; padding: 22% 0 16%; overflow: visible; }
 .about-photo .photo-frame { position: relative; width: 100%; margin-left: 2vw; border-radius: 8px; overflow: hidden; background: var(--cream-2); }
 .about-photo .photo-frame img { width: 100%; height: auto; }
 .about-sticker { position: absolute; z-index: 5; pointer-events: auto; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
@@ -532,9 +546,9 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 .about-sticker img, .about-sticker svg { display: block; width: 100%; height: auto; pointer-events: none; background: transparent; -webkit-user-drag: none; }
 .about-quote {
   margin: 4vh 0 2vh;
-  font-style: italic; font-weight: 600;
-  color: var(--red);
-  font-size: clamp(18px, 2.2vw, 26px); line-height: 1.4;
+  font-style: normal; font-weight: 400;
+  color: var(--black); opacity: .65;
+  font-size: 13px; line-height: 1.5;
 }
 .about-bio p { margin-bottom: 1.1em; font-size: clamp(15px, 1.35vw, 18px); line-height: 1.7; }
 .about-hobbies { margin-top: 3vh; padding-top: 2vh; border-top: 2px solid var(--black); font-size: 15px; opacity: .85; }
@@ -622,6 +636,7 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
   .tape { min-width: 56px; }
   .tape.is-open { width: 92vw; height: 78vh; }
   .tape-preview { display: none; }   /* 触屏无 hover，隐藏浮动预览避免被滚动裁切 */
+  .work-tape-preview { display: none; }
   .tape-face { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, .8fr); gap: 12px; padding: 14px 12px; }
   .tape-stills { max-height: 140px; }
   .tape-info .info-title { padding-right: 30px; }
@@ -630,9 +645,9 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
   .lightbox button { padding: 8px; font-size: 12px; }
   .lb-footer { padding: 8px; }
   .about-grid { grid-template-columns: 1fr; }
-  .about-photo-stage { padding: 32% 0 25%; }
+  .about-photo-stage { padding: 22% 0 28%; }
   .about-photo .photo-frame { width: 84%; margin-left: 8%; }
-  .about-playground { padding-bottom: 100%; }
+  .about-playground { padding-bottom: 115%; }
   .sticker-desktop, .contact-spin { display: none; }
   .menu-nav { padding-left: 14vw; }
   .menu-sticker[data-sticker-id="m-vhs"] { top: 19vh !important; right: 4vw !important; width: 28vw !important; }

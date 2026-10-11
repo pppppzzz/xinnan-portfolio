@@ -16,18 +16,18 @@ window.DECORATIONS = {
     { id: "m-star", src: "assets/media/stickers/sticker-smiling-star.png", pos: { bottom: "36vh", right: "8vw" }, width: "clamp(55px, 6vw, 80px)", rotate: 12 }
   ],
 
-  /* 初始组合依照片/正文尺寸计算；用户拖动后另存位置，不再使用初始锚点。
-     photo 相对照片，music/pets 相对组合区域；size 为照片宽度比。 */
+  /* 初始位置以可见主体中心计算。photo相对照片，side横跨照片右侧留白，
+     below用于手机正文后的错落摆放；size仍为完整PNG宽/照片宽。 */
   about: [
-    { id: "a-camera", src: "assets/media/stickers/sticker-camera.png", layout: { anchor: "photo", x: -.09, y: -.04, size: .36 }, mobile: { anchor: "photo", x: -.07, y: -.045, size: .40 }, rotate: -8, draggable: true },
-    { id: "a-ticket", src: "assets/media/stickers/sticker-concert-ticket.png", layout: { anchor: "music", x: .23, y: .04, size: .48 }, mobile: { anchor: "music", x: .24, y: .035, size: .54 }, rotate: 8, draggable: true },
-    { id: "a-headphones", src: "assets/media/stickers/sticker-headphones.png", layout: { anchor: "music", x: 0, y: 0, size: .36 }, mobile: { anchor: "music", x: 0, y: 0, size: .37 }, rotate: -14, draggable: true },
-    { id: "a-travel", src: "assets/media/stickers/sticker-travel-tag.png", layout: { anchor: "photo", x: .84, y: .80, size: .22 }, mobile: { anchor: "photo", x: .80, y: .80, size: .24 }, rotate: 11, draggable: true },
-    { id: "a-cat", src: "assets/media/stickers/sticker-cat-blue.png", layout: { anchor: "pets", x: 0, y: .08, size: .30 }, mobile: { anchor: "pets", x: 0, y: .10, size: .34 }, rotate: -7, draggable: true },
-    { id: "a-cat-white", src: "assets/media/stickers/sticker-cat-blue-white.png", layout: { anchor: "pets", x: .30, y: 0, size: .315 }, mobile: { anchor: "pets", x: .30, y: 0, size: .35 }, rotate: 6, draggable: true },
-    { id: "a-budgie", src: "assets/media/stickers/sticker-budgie-blue-white.png", layout: { anchor: "pets", x: .26, y: -.10, size: .18 }, mobile: { anchor: "pets", x: .25, y: -.10, size: .20 }, rotate: -5, draggable: true },
-    { id: "a-poodle", src: "assets/media/stickers/sticker-poodle-grey.png", layout: { anchor: "pets", x: .54, y: .18, size: .29 }, mobile: { anchor: "pets", x: .59, y: .17, size: .34 }, rotate: 5, draggable: true },
-    { id: "a-mask", src: "assets/media/stickers/sticker-mask.png", layout: { anchor: "photo", x: .07, y: -.20 }, mobile: { anchor: "photo", x: .02, y: -.20 }, draggable: true,
+    { id: "a-camera", src: "assets/media/stickers/sticker-camera.png", bodyBox: [234, 42, 1373, 933], layout: { anchor: "photo", x: .13, y: .02, size: .36 }, mobile: { anchor: "photo", x: .14, y: .035, size: .40 }, rotate: -8, draggable: true },
+    { id: "a-ticket", src: "assets/media/stickers/sticker-concert-ticket.png", bodyBox: [73, 117, 1474, 920], layout: { anchor: "photo", x: 1.06, y: .76, size: .48 }, mobile: { anchor: "photo", x: .63, y: 1.12, size: .54 }, rotate: 8, draggable: true },
+    { id: "a-headphones", src: "assets/media/stickers/sticker-headphones.png", bodyBox: [284, 8, 1379, 1019], layout: { anchor: "side", x: .85, y: .40, size: .36 }, mobile: { anchor: "below", x: .80, y: .22, size: .37 }, rotate: -14, draggable: true },
+    { id: "a-travel", src: "assets/media/stickers/sticker-travel-tag.png", bodyBox: [165, 66, 875, 1455], layout: { anchor: "photo", x: .07, y: .99, size: .22 }, mobile: { anchor: "photo", x: .075, y: 1.01, size: .24 }, rotate: -11, draggable: true },
+    { id: "a-cat", src: "assets/media/stickers/sticker-cat-blue.png", bodyBox: [124, 164, 1192, 1125], layout: { anchor: "photo", x: 1.09, y: .92, size: .30 }, mobile: { anchor: "below", x: .21, y: .72, size: .34 }, rotate: -7, draggable: true },
+    { id: "a-cat-white", src: "assets/media/stickers/sticker-cat-blue-white.png", bodyBox: [68, 111, 1246, 1140], layout: { anchor: "photo", x: 1.32, y: 1.045, size: .28 }, mobile: { anchor: "below", x: .52, y: 1.08, size: .31 }, rotate: 6, draggable: true },
+    { id: "a-budgie", src: "assets/media/stickers/sticker-budgie-blue-white.png", bodyBox: [213, 98, 1103, 1115], layout: { anchor: "photo", x: .94, y: .56, size: .18 }, mobile: { anchor: "photo", x: .965, y: .65, size: .20 }, rotate: -5, draggable: true },
+    { id: "a-poodle", src: "assets/media/stickers/sticker-poodle-grey.png", bodyBox: [151, 65, 1388, 975], layout: { anchor: "side", x: .58, y: .82, size: .29 }, mobile: { anchor: "below", x: .82, y: .66, size: .34 }, rotate: 5, draggable: true },
+    { id: "a-mask", src: "assets/media/stickers/sticker-mask.png", bodyBox: [650, 22, 1815, 630], layout: { anchor: "side", x: .36, y: .20 }, mobile: { anchor: "photo", x: .64, y: .79 }, draggable: true,
       faceFit: { bodyScale: 1.15, portraitSize: [825, 1100], portraitEyes: [[309, 390], [450, 360]], imageSize: [2172, 724], eyeHoles: [[1056, 400], [1518, 360]] } }
   ],
 

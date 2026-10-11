@@ -10,6 +10,60 @@
   var tapes = [];   // { project, el, refs, paint }
   var viewer = { rec: null, scale: 1, x: 0, y: 0, width: 0, height: 0, pointers: new Map(), gesture: null, focus: null };
   var lightboxStage;
+  var hoverPreview, hoverPoint = null, rowObserver, rowController;
+
+  function hidePreview() { if (hoverPreview) hoverPreview.classList.remove("is-visible"); }
+  function updatePreview() {
+    if (!hoverPoint || !rowEl || matchMedia("(max-width: 900px)").matches) { hidePreview(); return; }
+    // Scrolling can put a different bookmark (or a gap) below a stationary pointer.
+    var hit = document.elementFromPoint(hoverPoint.x, hoverPoint.y);
+    var tape = hit && hit.closest(".tape");
+    var rec = tape && tapes.find(function (t) { return t.el === tape; });
+    if (!rec || tape.classList.contains("is-open")) { hidePreview(); return; }
+    var r = tape.getBoundingClientRect(), area = rowEl.getBoundingClientRect();
+    if (r.right <= area.left || r.left >= area.right || r.bottom <= 0 || r.top >= innerHeight) { hidePreview(); return; }
+    var image = hoverPreview.querySelector("img");
+    if (image.getAttribute("src") !== rec.project.cover) image.src = rec.project.cover;
+    image.alt = APP.L(rec.project.title);
+    hoverPreview.style.left = clamp((r.left + r.right) / 2 - 100, 8, innerWidth - 208) + "px";
+    hoverPreview.style.top = Math.max(70, r.top - 140) + "px";
+    hoverPreview.classList.add("is-visible");
+  }
+  function bindRowScroll() {
+    rowController = new AbortController();
+    var options = { signal: rowController.signal, passive: true };
+    // Lenis must not process these inputs again; boundary events retain native page scrolling.
+    rowEl.setAttribute("data-lenis-prevent-wheel", "");
+    rowEl.addEventListener("wheel", function (e) {
+      if (e.ctrlKey || e.shiftKey || e.deltaX !== 0 || e.target.closest(".tape-face")) return;
+      var limit = rowEl.scrollWidth - rowEl.clientWidth;
+      if (limit <= 1 || !e.deltaY) return;
+      var unit = e.deltaMode === 1 ? parseFloat(getComputedStyle(rowEl).lineHeight) || 24 : e.deltaMode === 2 ? rowEl.clientWidth : 1;
+      var next = clamp(rowEl.scrollLeft + e.deltaY * unit, 0, limit);
+      if (Math.abs(next - rowEl.scrollLeft) < .5) return;
+      e.preventDefault(); e.stopPropagation();
+      rowEl.scrollLeft = next; // Follow the real delta immediately; no queued tween/inertia.
+      updatePreview();
+    }, { signal: rowController.signal, passive: false });
+    function trackPointer(e) {
+      if (e.pointerType !== "mouse") return;
+      hoverPoint = { x: e.clientX, y: e.clientY }; updatePreview();
+    }
+    rowEl.addEventListener("pointerenter", trackPointer, options);
+    rowEl.addEventListener("pointermove", trackPointer, options);
+    rowEl.addEventListener("pointerleave", function () { hoverPoint = null; hidePreview(); }, options);
+    rowEl.addEventListener("scroll", updatePreview, options);
+    rowObserver = new ResizeObserver(updatePreview);
+    rowObserver.observe(rowEl);
+    tapes.forEach(function (t) { rowObserver.observe(t.el); });
+  }
+  function alignOpenTape(rec) {
+    var area = rowEl.getBoundingClientRect(), r = rec.el.getBoundingClientRect();
+    var left = r.left - area.left + rowEl.scrollLeft, right = left + r.width;
+    if (left < rowEl.scrollLeft) rowEl.scrollLeft = left;
+    else if (right > rowEl.scrollLeft + rowEl.clientWidth) rowEl.scrollLeft = right - rowEl.clientWidth;
+    hidePreview();
+  }
 
   function readState() {
     try {
@@ -301,6 +355,9 @@
     };
 
     var rec = { project: project, el: el, refs: refs, mediaIndex: 0, video: null };
+    el.addEventListener("transitionend", function (e) {
+      if (e.target === el && e.propertyName === "width" && el.classList.contains("is-open")) alignOpenTape(rec);
+    });
     refs.prev.addEventListener("click", function () { selectMedia(rec, rec.mediaIndex - 1); });
     refs.next.addEventListener("click", function () { selectMedia(rec, rec.mediaIndex + 1); });
     refs.stills.setAttribute("data-lenis-prevent", "");
@@ -480,10 +537,8 @@
     state.openId = rec.project.id;
     saveState();
     history.replaceState(null, "", "#" + rec.project.id);
-    if (matchMedia("(max-width: 900px)").matches) {
-      var left = rec.el.getBoundingClientRect().left - rowEl.getBoundingClientRect().left + rowEl.scrollLeft;
-      rowEl.scrollTo({ left: left, behavior: "smooth" });
-    }
+    alignOpenTape(rec);
+    requestAnimationFrame(function () { if (rec.el.isConnected && rec.el.classList.contains("is-open")) alignOpenTape(rec); });
   }
   function closeTape(rec) {
     rec.el.classList.remove("is-open");
@@ -497,6 +552,9 @@
 
   /* ---------------- 行渲染 ---------------- */
   function renderRow() {
+    if (rowController) rowController.abort();
+    if (rowObserver) rowObserver.disconnect();
+    hoverPoint = null; hidePreview();
     tapes.forEach(function (t) { if (t.video) t.video.pause(); });
     if (rowEl) rowEl.remove();
     tapes = [];
@@ -518,6 +576,8 @@
       if (rec && !rec.el.classList.contains("is-open")) openTape(rec);
     });
 
+    bindRowScroll();
+
     if (state.openId) {
       var target = tapes.filter(function (t) { return t.project.id === state.openId; })[0];
       if (target) openTape(target);
@@ -536,7 +596,15 @@
       h.appendChild(head);
       buildFilter();
       buildLightbox();
+      hoverPreview = document.createElement("div");
+      hoverPreview.className = "work-tape-preview";
+      hoverPreview.setAttribute("aria-hidden", "true");
+      hoverPreview.innerHTML = '<img alt="">';
+      document.body.appendChild(hoverPreview);
       renderRow();
+      window.addEventListener("scroll", updatePreview, { passive: true });
+      window.addEventListener("resize", updatePreview, { passive: true });
+      window.addEventListener("pagehide", function () { hoverPoint = null; hidePreview(); });
       APP.onLang(function () {
         head.textContent = APP.t("workTitle");
         tapes.forEach(function (t) { t.paint(); });

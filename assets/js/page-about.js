@@ -1,4 +1,4 @@
-/* 关于页：紫色标题 + 照片（可拖拽贴纸）+ 红色斜体引言 + 自述。 */
+/* 关于页：紫色标题、完整照片、跨内容区拖动贴纸与自述。 */
 (function () {
   "use strict";
 
@@ -51,24 +51,37 @@
       }
     }
     function layout() {
-      if (!frame.clientWidth) return;
+      if (!frame.clientWidth || !image.naturalWidth) return;
       var initial = window.matchMedia("(max-width: 900px)").matches ? (config.mobile || config.layout) : config.layout;
       var position = movedPosition || initial;
       var f = photoBounds(), h = host.getBoundingClientRect(), b = bio.getBoundingClientRect();
       stickerEl.style.width = f.width * (widthRatio || initial.size) + "px";
       if (position.anchor === "area") {
         place(position.x * host.clientWidth, position.y * host.clientHeight);
-      } else if (position.anchor === "bioBelow") {
-        place(b.left - h.left + position.x * b.width, b.bottom - h.top + 24 + position.y * f.height);
-      } else if (position.anchor === "music" || position.anchor === "pets") {
-        var mobile = window.matchMedia("(max-width: 900px)").matches;
-        var pets = position.anchor === "pets";
-        var groupWidth = pets ? Math.min(b.width * (mobile ? .94 : .80), f.width * (mobile ? 1.10 : .90)) : b.width;
-        var groupLeft = b.left - h.left + b.width * (mobile ? .03 : (pets ? .12 : .08));
-        var groupTop = b.bottom - h.top + 24 + f.width * (pets ? (mobile ? .70 : .65) : (mobile ? .08 : .10));
-        place(groupLeft + position.x * groupWidth, groupTop + position.y * groupWidth);
-      } else {
+      } else if (movedPosition) {
         place(f.x + position.x * f.width, f.y + position.y * f.height);
+      } else {
+        /* 可见主体的旋转后中心决定构图，透明画布/面具飘带不决定视觉位置。 */
+        var w = parseFloat(stickerEl.style.width), scale = w / image.naturalWidth;
+        var height = image.naturalHeight * scale, box = config.bodyBox;
+        var cx = (box[0] + box[2]) / 2 * scale - w / 2;
+        var cy = (box[1] + box[3]) / 2 * scale - height / 2;
+        var angle = rotation * Math.PI / 180;
+        var bodyX = w / 2 + cx * Math.cos(angle) - cy * Math.sin(angle);
+        var bodyY = height / 2 + cx * Math.sin(angle) + cy * Math.cos(angle);
+        var targetX = f.x + position.x * f.width;
+        var targetY = f.y + position.y * f.height;
+        if (position.anchor === "side") targetX = f.x + f.width + position.x * (b.right - h.left - f.x - f.width);
+        if (position.anchor === "below") {
+          targetX = b.left - h.left + position.x * b.width;
+          targetY = b.bottom - h.top + 24 + position.y * f.width;
+        }
+        place(targetX - bodyX, targetY - bodyY);
+        // 窄桌面/英文正文更长时让整张PNG避开正文，优先阅读留白。
+        var r = stickerEl.getBoundingClientRect();
+        if (r.left < b.right && r.right > b.left && r.top < b.bottom && r.bottom > b.top) {
+          place(parseFloat(stickerEl.style.left), parseFloat(stickerEl.style.top) + b.bottom + 20 - r.top);
+        }
       }
     }
     function followPointer() {

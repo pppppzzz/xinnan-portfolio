@@ -46,7 +46,7 @@ window.I18N = {
     natureLabel: "性质",
     themeYearsLabel: "主题年代",
     teamNote: "团队项目",
-    photoQuote: "（照片上的贴纸可以拖走，试试看。）",
+    photoQuote: "贴纸可以拖动，试试看。",
     expertises: "专长",
     featured: "精选与在制",
     clients: "合作与委托"
@@ -97,7 +97,7 @@ window.I18N = {
     natureLabel: "Nature",
     themeYearsLabel: "Thematic era",
     teamNote: "Team project",
-    photoQuote: "(The stickers on the photo can be dragged away — try it.)",
+    photoQuote: "Drag the stickers — give it a try.",
     expertises: "Expertise",
     featured: "Selected & In Progress",
     clients: "Clients & Commissions"
