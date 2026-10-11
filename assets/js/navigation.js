@@ -60,7 +60,12 @@
       restoring = true;
       if (window.PAGE && PAGE.restoreState) PAGE.restoreState(r.page);
       function position() {
-        if (APP.lenis) APP.lenis.scrollTo(r.y || 0, {immediate:true, force:true});
+        if (APP.lenis) {
+          // Its debounced ResizeObserver can still have the empty pre-render page's
+          // height after a network load or BFCache restore. Measure before clamping.
+          APP.lenis.resize();
+          APP.lenis.scrollTo(r.y || 0, {immediate:true, force:true});
+        }
         else window.scrollTo(0, r.y || 0);
         if (window.PAGE && PAGE.restoreScroll) PAGE.restoreScroll(r.page);
       }
