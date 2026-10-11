@@ -297,7 +297,7 @@ window.PROJECTS = [
   {
     id: "ja-ip",
     title: { zh: "JA 学生公司 IP", en: "JA Student Company IP" },
-    desc: { zh: "JA 学生公司角色形象及品牌应用探索。团队获 2023 JA 中国学生公司大赛营销特别奖。", en: "Character and brand application exploration for a JA student company. The team received the Marketing Special Award at the 2023 JA China Student Company Competition." },
+    desc: { zh: "JA 学生公司角色形象及品牌应用探索。团队获最佳产品奖、2023 JA 中国学生公司大赛营销特别奖，并入围全国赛。", en: "Character and brand application exploration for a JA student company. The team received the Best Product Award and was a national competition finalist. It also received the Marketing Special Award at the 2023 JA China Student Company Competition." },
     role: { zh: "角色形象及品牌应用探索", en: "Character and brand application exploration" },
     year: null, yearStart: 2022, yearEnd: 2023, yearConfirmed: true,
     types: ["visual"],

@@ -57,7 +57,7 @@ window.SITE = {
     scrollHint: { zh: "往下翻翻，有点东西 ↓", en: "SCROLL DOWN, THERE’S GOOD STUFF ↓" }
   },
 
-  /* 本人选定 Lobby Time；本地文件待提供，缺少时控件显示未就绪，不假装播放。 */
+  /* 本人提供的 Lobby Time 本地音频；默认关闭，有声视频播放时避让。 */
   bgm: {
     src: "assets/media/audio/lobby-time.mp3",
     title: { zh: "Lobby Time", en: "Lobby Time" },
