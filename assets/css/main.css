@@ -706,3 +706,14 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 @media (max-width: 900px), (max-height: 550px) {
   .home-selected-links { position: static; }
 }
+
+/* Only the English name is measured to fit; preserve the Chinese wordmark. */
+.contact-wordmark.is-english { min-width: 0; padding-left: 2px; padding-right: 2px; }
+.contact-wordmark.is-english .contact-name { display: inline-block; }
+
+/* A cramped contact row must not scroll the clipped parent when its copy button gains focus. */
+.contact-list { container-type: inline-size; }
+@container (max-width: 340px) {
+  .contact-row { position: relative; gap: 8px; font-size: 16px; }
+  .contact-row .copied-flag { position: absolute; left: 52px; top: calc(100% + 2px); }
+}

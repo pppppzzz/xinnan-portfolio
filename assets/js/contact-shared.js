@@ -72,11 +72,36 @@
     wrap.appendChild(spin);
     var contacts = buildContactList(painters);
     wrap.appendChild(contacts.node);
-    var mark = el('<div class="contact-wordmark display"></div>');
-    painters.push(function () { mark.textContent = APP.L(SITE.brand); });
+    var mark = el('<div class="contact-wordmark display"><span class="contact-name"></span></div>');
+    var name = mark.querySelector('.contact-name');
+    function fitName() {
+      mark.style.fontSize = '';
+      if (!mark.classList.contains('is-english') || !mark.clientWidth) return;
+      var style = getComputedStyle(mark), baseSize = parseFloat(style.fontSize);
+      // Measure real uppercase glyphs/font/weight/spacing rather than character counts.
+      // Keep both outline edges inside the original clipped contact wrapper.
+      var available = mark.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)
+        - 2 * (parseFloat(style.webkitTextStrokeWidth) || 0) - 2;
+      var natural = name.getBoundingClientRect().width;
+      if (natural > available && available > 0) mark.style.fontSize = baseSize * available / natural + 'px';
+    }
+    painters.push(function () {
+      name.textContent = APP.L(SITE.brand);
+      mark.classList.toggle('is-english', APP.lang === 'en');
+      fitName();
+    });
     wrap.appendChild(mark);
     container.appendChild(wrap);
     container.appendChild(el('<div class="contact-stripes"><i></i><i></i><i></i></div>'));
+    var lastWidth = 0;
+    var observer = new ResizeObserver(function () {
+      // Ignore height changes caused by fitting itself.
+      if (mark.clientWidth !== lastWidth) { lastWidth = mark.clientWidth; fitName(); }
+    });
+    observer.observe(mark);
+    if (document.fonts) document.fonts.ready.then(fitName);
+    window.addEventListener('pagehide', function () { observer.disconnect(); });
+    window.addEventListener('pageshow', function () { observer.observe(mark); fitName(); });
     return contacts;
   }
 

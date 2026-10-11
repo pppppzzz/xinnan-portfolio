@@ -103,10 +103,10 @@ window.PROJECTS = [
     id: "jagermeister",
     title: { zh: "野格《一碰就出界》", en: "Jägermeister · One Touch, Out of Bounds" },
     desc: {
-      zh: "野格《一碰就出界》广告影像，竖屏。参与创意与分镜。",
-      en: "Jägermeister “One Touch, Out of Bounds” ad film, vertical format. Contributed to concept and storyboard."
+      zh: "野格《一碰就出界》竖屏广告影像。参与创意构思与镜头画面方案，分镜用于前期视觉叙事规划。",
+      en: "Jägermeister “One Touch, Out of Bounds” ad film in vertical format. Contributed to concept development and shot plans, using storyboards to plan the visual narrative."
     },
-    role: { zh: "创意与分镜参与", en: "Concept and storyboard contribution" },
+    role: { zh: "参与创意构思与镜头画面方案", en: "Contributed to concept development and shot plans" },
     year: 2026, yearConfirmed: true,
     types: ["film"],
     status: "normal",
@@ -187,16 +187,16 @@ window.PROJECTS = [
 
   {
     id: "xiaojin-suzhou",
-    title: { zh: "小金宣传片 · 苏州（金鸡湖）篇分镜", en: "Xiaojin Promo · Suzhou (Jinji Lake) Storyboard" },
-    desc: { zh: "小金宣传片苏州（金鸡湖）篇分镜，连续两页。镜头节奏、景别与场景衔接。", en: "Storyboard for the Xiaojin Suzhou (Jinji Lake) promo, two consecutive boards. Pacing, shot size and scene transitions." },
-    role: { zh: "分镜设计", en: "Storyboard design" },
+    title: { zh: "小金宣传片 · 苏州（金鸡湖）篇", en: "Xiaojin Promo · Suzhou (Jinji Lake)" },
+    desc: { zh: "小金宣传片苏州（金鸡湖）篇的画面方案，围绕镜头节奏、景别与场景衔接展开。展示分镜阶段的两页设计稿。", en: "Shot plans for the Xiaojin Suzhou (Jinji Lake) promo, focusing on pacing, shot scale and scene transitions. Two pages from the storyboarding stage are shown." },
+    role: { zh: "前期画面设计", en: "Pre-production shot design" },
     year: 2026, yearConfirmed: true,
     types: ["film"],
     status: "normal",
     cover: "assets/media/works/xiaojin-suzhou/b1-prev.jpg",
     media: [
-      { type: "image", src: "assets/media/works/xiaojin-suzhou/b1.jpg", prev: "assets/media/works/xiaojin-suzhou/b1-prev.jpg", nature: { zh: "分镜", en: "Storyboard" }, caption: { zh: "分镜 1", en: "Board 1" }, zoom: true },
-      { type: "image", src: "assets/media/works/xiaojin-suzhou/b2.jpg", prev: "assets/media/works/xiaojin-suzhou/b2-prev.jpg", nature: { zh: "分镜", en: "Storyboard" }, caption: { zh: "分镜 2", en: "Board 2" }, zoom: true }
+      { type: "image", src: "assets/media/works/xiaojin-suzhou/b1.jpg", prev: "assets/media/works/xiaojin-suzhou/b1-prev.jpg", nature: { zh: "前期画面设计稿", en: "Pre-production shot artwork" }, caption: { zh: "画面方案 1", en: "Shot plan 1" }, zoom: true },
+      { type: "image", src: "assets/media/works/xiaojin-suzhou/b2.jpg", prev: "assets/media/works/xiaojin-suzhou/b2-prev.jpg", nature: { zh: "前期画面设计稿", en: "Pre-production shot artwork" }, caption: { zh: "画面方案 2", en: "Shot plan 2" }, zoom: true }
     ],
     links: [ { label: { zh: "观看成片", en: "Watch Final" }, url: "https://xhslink.cn/o/6hD4lnf2zWr", external: true } ],
     featured: false, order: 7
@@ -204,16 +204,16 @@ window.PROJECTS = [
 
   {
     id: "xiaojin-xihu",
-    title: { zh: "小金宣传片 · 西湖篇分镜", en: "Xiaojin Promo · West Lake Storyboard" },
-    desc: { zh: "小金宣传片西湖篇分镜，连续两页。", en: "Storyboard for the Xiaojin West Lake promo, two consecutive boards." },
-    role: { zh: "分镜设计", en: "Storyboard design" },
+    title: { zh: "小金宣传片 · 西湖篇", en: "Xiaojin Promo · West Lake" },
+    desc: { zh: "小金宣传片西湖篇的前期画面设计，展示分镜阶段的两页设计稿。", en: "Pre-production shot design for the Xiaojin West Lake promo. Two pages from the storyboarding stage are shown." },
+    role: { zh: "前期画面设计", en: "Pre-production shot design" },
     year: 2026, yearConfirmed: true,
     types: ["film"],
     status: "normal",
     cover: "assets/media/works/xiaojin-xihu/b1-prev.jpg",
     media: [
-      { type: "image", src: "assets/media/works/xiaojin-xihu/b1.jpg", prev: "assets/media/works/xiaojin-xihu/b1-prev.jpg", nature: { zh: "分镜", en: "Storyboard" }, caption: { zh: "分镜 1", en: "Board 1" }, zoom: true },
-      { type: "image", src: "assets/media/works/xiaojin-xihu/b2.jpg", prev: "assets/media/works/xiaojin-xihu/b2-prev.jpg", nature: { zh: "分镜", en: "Storyboard" }, caption: { zh: "分镜 2", en: "Board 2" }, zoom: true }
+      { type: "image", src: "assets/media/works/xiaojin-xihu/b1.jpg", prev: "assets/media/works/xiaojin-xihu/b1-prev.jpg", nature: { zh: "前期画面设计稿", en: "Pre-production shot artwork" }, caption: { zh: "画面方案 1", en: "Shot plan 1" }, zoom: true },
+      { type: "image", src: "assets/media/works/xiaojin-xihu/b2.jpg", prev: "assets/media/works/xiaojin-xihu/b2-prev.jpg", nature: { zh: "前期画面设计稿", en: "Pre-production shot artwork" }, caption: { zh: "画面方案 2", en: "Shot plan 2" }, zoom: true }
     ],
     links: [ { label: { zh: "观看成片", en: "Watch Final" }, url: "https://xhslink.cn/o/7VUm84sD9SY", external: true } ],
     featured: false, order: 8
@@ -221,30 +221,30 @@ window.PROJECTS = [
 
   {
     id: "ad-pjzj",
-    title: { zh: "商业广告分镜 · 披荆斩棘的哥哥", en: "Commercial Storyboard · Call Me by Fire" },
-    desc: { zh: "《披荆斩棘的哥哥》广告分镜。参与广告镜头构思与画面方案。", en: "Ad storyboard for “Call Me by Fire”. Contributed to shot ideas and visual plans." },
+    title: { zh: "商业广告 · 披荆斩棘的哥哥", en: "Commercial · Call Me by Fire" },
+    desc: { zh: "《披荆斩棘的哥哥》广告的镜头构思与画面方案。展示分镜阶段的前期设计稿。", en: "Shot ideas and visual plans for the “Call Me by Fire” commercial. Pre-production artwork from the storyboarding stage is shown." },
     role: { zh: "参与广告镜头构思与画面方案", en: "Contributed to shot ideas and visual plans" },
     year: 2026, yearConfirmed: true,
     types: ["film"],
     status: "normal",
     cover: "assets/media/works/ad-pjzj/b1-prev.jpg",
     media: [
-      { type: "image", src: "assets/media/works/ad-pjzj/b1.jpg", prev: "assets/media/works/ad-pjzj/b1-prev.jpg", nature: { zh: "分镜", en: "Storyboard" }, caption: { zh: "广告分镜", en: "Ad storyboard" }, zoom: true }
+      { type: "image", src: "assets/media/works/ad-pjzj/b1.jpg", prev: "assets/media/works/ad-pjzj/b1-prev.jpg", nature: { zh: "前期画面设计稿", en: "Pre-production shot artwork" }, caption: { zh: "广告画面方案", en: "Ad shot plan" }, zoom: true }
     ],
     links: [], featured: false, order: 9
   },
 
   {
     id: "ad-qianwen",
-    title: { zh: "千问 App 广告分镜", en: "Qwen App Ad Storyboard" },
-    desc: { zh: "千问 App 广告分镜。", en: "Ad storyboard for the Qwen app." },
-    role: { zh: "分镜设计", en: "Storyboard design" },
+    title: { zh: "千问 App 广告", en: "Qwen App Ad" },
+    desc: { zh: "千问 App 广告的前期画面方案，展示分镜阶段的设计稿。", en: "Pre-production shot plans for the Qwen app ad, shown through artwork from the storyboarding stage." },
+    role: { zh: "前期画面设计", en: "Pre-production shot design" },
     year: 2026, yearConfirmed: true,
     types: ["film"],
     status: "normal",
     cover: "assets/media/works/ad-qianwen/b1-prev.jpg",
     media: [
-      { type: "image", src: "assets/media/works/ad-qianwen/b1.jpg", prev: "assets/media/works/ad-qianwen/b1-prev.jpg", nature: { zh: "分镜", en: "Storyboard" }, caption: { zh: "千问 App 广告分镜", en: "Qwen app ad storyboard" }, zoom: true }
+      { type: "image", src: "assets/media/works/ad-qianwen/b1.jpg", prev: "assets/media/works/ad-qianwen/b1-prev.jpg", nature: { zh: "前期画面设计稿", en: "Pre-production shot artwork" }, caption: { zh: "千问 App 广告画面方案", en: "Qwen app ad shot plan" }, zoom: true }
     ],
     links: [], featured: false, order: 10
   },

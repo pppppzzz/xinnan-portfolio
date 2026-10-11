@@ -2,7 +2,7 @@
    “全部”由作品页生成；项目可归入多个分类，但不复制项目。 */
 window.CATEGORIES = [
   { id: "visual",       zh: "视觉设计",     en: "Visual Design",         enabled: true },
-  { id: "film",         zh: "影像与分镜",   en: "Film & Storyboards",     enabled: true },
+  { id: "film",         zh: "影像设计",   en: "Motion & Film Design",     enabled: true },
   { id: "installation", zh: "装置与物件",   en: "Installations & Objects", enabled: true },
   { id: "web",          zh: "网站设计",     en: "Web Design",            enabled: true }
 ];

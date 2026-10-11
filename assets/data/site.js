@@ -25,12 +25,12 @@ window.SITE = {
     bio: {
       zh: [
         "就读于上海视觉艺术学院艺术与科技专业，创作涉及视觉设计、交互叙事与影像。",
-        "曾参与 AI 影视项目的创意、分镜设计、视觉资产与影像制作，也有品牌与 IP 设计经历。",
+        "曾参与 AI 影视项目的创意构思、视觉资产设计与影像制作，也有品牌与 IP 设计经历。",
         "关注画面中的故事，以及叙事如何通过空间、物件和互动被体验。实体互动装置的探索围绕心理与人际关系展开，尝试将抽象概念转化为可参与的规则。"
       ],
       en: [
         "Studying Art and Technology at Shanghai Institute of Visual Arts, with creative work spanning visual design, interactive storytelling, and film.",
-        "Experience in concepts, storyboard design, visual assets, and production for AI film projects, as well as brand and IP design.",
+        "Experience in concept development, visual asset design, and production for AI film projects, as well as brand and IP design.",
         "A focus on stories within images and how narrative is experienced through spaces, objects, and interaction. Explorations of physical interactive installations centre on psychology and interpersonal relationships, turning abstract concepts into rules that invite participation."
       ]
     },
