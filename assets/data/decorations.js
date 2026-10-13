@@ -47,6 +47,7 @@ window.DECORATIONS = {
       { src: "assets/media/stickers/sticker-smiling-star.png", weight: 1, canvas: [1536, 1024], bodyBox: [338, 85, 1199, 932] },
       { src: "assets/media/stickers/sticker-cat-blue.png", weight: 1, canvas: [1315, 1197], bodyBox: [124, 164, 1192, 1125] },
       { src: "assets/media/stickers/sticker-cat-blue-white.png", weight: 1, canvas: [1313, 1198], bodyBox: [68, 111, 1246, 1140] },
+      { src: "assets/media/stickers/sticker-cat-orange.png", weight: 1, canvas: [1315, 1197], bodyBox: [16, 60, 1300, 1174] },
       { src: "assets/media/stickers/sticker-budgie-blue-white.png", weight: 1, canvas: [1316, 1195], bodyBox: [213, 98, 1103, 1115] },
       { src: "assets/media/stickers/sticker-poodle-grey.png", weight: 1, canvas: [1536, 1024], bodyBox: [151, 65, 1388, 975] }
     ]

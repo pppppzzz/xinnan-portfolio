@@ -736,22 +736,13 @@ button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--p
 @media (hover: none) and (pointer: coarse) {
   .work-tape-preview:not(.is-keyboard) { display: none; }
 }
-.tape-media .media-frame.is-main-photo { display: flex; align-items: center; justify-content: center; }
-.tape-media .is-main-photo img { position: static; width: auto; height: auto; max-width: 100%; max-height: 100%; }
-
-/* The supplementary Caijin board uses its full natural height, including on phones. */
-.tape.is-open.has-auto-height-media { height: auto; }
-.tape.is-open.has-auto-height-media .tape-face {
-  position: relative; inset: auto; margin-left: var(--spine-w);
-  grid-template-rows: auto; min-height: var(--tape-h);
+/* Keep Caijin's thumbnail footer fixed while its longer bilingual description scrolls. */
+.tape[data-id="caijin"] .tape-info { overflow: hidden; }
+.tape[data-id="caijin"] .tape-info-copy {
+  display: flex; flex-direction: column; gap: 10px;
+  flex: 1 1 0; min-height: 0; overflow-y: auto; scrollbar-width: thin;
 }
-.has-auto-height-media .tape-media { grid-template-rows: auto auto; align-self: start; }
-.tape-media .media-frame.is-auto-height { height: auto; }
-.tape-media .is-auto-height img { position: static; width: 100%; height: auto; max-height: none; }
-@media (max-width: 900px) {
-  .tape.is-open.has-auto-height-media .tape-face { grid-template-rows: auto auto; }
-}
-
+.tape[data-id="caijin"] .tape-info-copy > * { flex-shrink: 0; }
 /* A cramped contact row must not scroll the clipped parent when its copy button gains focus. */
 .contact-list { container-type: inline-size; }
 @container (max-width: 340px) {

@@ -349,6 +349,15 @@
         '</div>' +
       '</div>';
 
+    if (project.id === "caijin") {
+      var info = el.querySelector(".tape-info"), copy = document.createElement("div");
+      copy.className = "tape-info-copy";
+      Array.from(info.children).forEach(function (child) {
+        if (!child.classList.contains("tape-stills")) copy.appendChild(child);
+      });
+      info.insertBefore(copy, info.firstChild);
+    }
+
     var refs = {
       previewImg: el.querySelector(".tape-preview img"),
       spine: el.querySelector(".spine-title"),
@@ -496,9 +505,6 @@
     if (rec.video) rec.video.pause();
     frame.innerHTML = "";
     frame.dataset.mediaIndex = rec.mediaIndex;
-    frame.classList.toggle("is-main-photo", rec.project.id === "caijin" && rec.mediaIndex === 0);
-    frame.classList.toggle("is-auto-height", !!(m && m.autoHeight));
-    rec.el.classList.toggle("has-auto-height-media", !!(m && m.autoHeight));
     rec.video = null;
     if (!m) return;
 
@@ -541,7 +547,6 @@
       frame.classList.remove("is-video");
       var img = document.createElement("img");
       img.src = m.src; img.alt = APP.L(m.caption) || "";
-      if (m.autoHeight) img.addEventListener("load", function () { if (APP.lenis) APP.lenis.resize(); });
       img.tabIndex = 0; img.setAttribute("role", "button"); img.setAttribute("data-cursor", "zoom");
       img.addEventListener("click", function () { openLightbox(rec); });
       img.addEventListener("keydown", function (e) {

@@ -63,7 +63,7 @@ window.PROJECTS = [
     cover: "assets/media/works/caijin/caijin-main.jpg",
     media: [
       { type: "image", src: "assets/media/works/caijin/caijin-main.jpg", prev: "assets/media/works/caijin/caijin-main.jpg", nature: { zh: "现场实拍", en: "Event photograph" }, caption: { zh: "裁金装置全景", en: "Caijin installation overview" } },
-      { type: "image", src: "assets/media/works/caijin/caijin-story-board.jpg", prev: "assets/media/works/caijin/caijin-story-board-prev.jpg", autoHeight: true, nature: { zh: "设计展板", en: "Design board" }, caption: { zh: "故事背景、视觉风格与人物设计", en: "Story background, visual style and character design" } },
+      { type: "image", src: "assets/media/works/caijin/caijin-story-board.jpg", prev: "assets/media/works/caijin/caijin-story-board-prev.jpg", nature: { zh: "设计展板", en: "Design board" }, caption: { zh: "故事背景、视觉风格与人物设计", en: "Story background, visual style and character design" } },
       { type: "image", src: "assets/media/works/caijin/poster-2.jpg", prev: "assets/media/works/caijin/poster-2-prev.jpg", nature: { zh: "装置海报", en: "Installation poster" }, caption: { zh: "装置海报 2", en: "Installation poster 2" } },
       { type: "image", src: "assets/media/works/caijin/poster-3.jpg", prev: "assets/media/works/caijin/poster-3-prev.jpg", nature: { zh: "装置海报", en: "Installation poster" }, caption: { zh: "装置海报 3", en: "Installation poster 3" } },
       { type: "image", src: "assets/media/works/caijin/newspaper-1.jpg", prev: "assets/media/works/caijin/newspaper-1-prev.jpg", nature: { zh: "装置物料·报纸", en: "Installation material · newspaper" }, caption: { zh: "装置报纸设计 1", en: "Installation newspaper 1" }, zoom: true },
