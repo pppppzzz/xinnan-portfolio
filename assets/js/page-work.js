@@ -497,6 +497,8 @@
     frame.innerHTML = "";
     frame.dataset.mediaIndex = rec.mediaIndex;
     frame.classList.toggle("is-main-photo", rec.project.id === "caijin" && rec.mediaIndex === 0);
+    frame.classList.toggle("is-auto-height", !!(m && m.autoHeight));
+    rec.el.classList.toggle("has-auto-height-media", !!(m && m.autoHeight));
     rec.video = null;
     if (!m) return;
 
@@ -539,6 +541,7 @@
       frame.classList.remove("is-video");
       var img = document.createElement("img");
       img.src = m.src; img.alt = APP.L(m.caption) || "";
+      if (m.autoHeight) img.addEventListener("load", function () { if (APP.lenis) APP.lenis.resize(); });
       img.tabIndex = 0; img.setAttribute("role", "button"); img.setAttribute("data-cursor", "zoom");
       img.addEventListener("click", function () { openLightbox(rec); });
       img.addEventListener("keydown", function (e) {
