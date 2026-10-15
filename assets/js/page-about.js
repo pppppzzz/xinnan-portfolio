@@ -178,6 +178,9 @@
       function paintAll() { painters.forEach(function (f) { f(); }); layoutAll(); }
       paintAll();
       APP.onLang(paintAll);
+      // Separate sibling: the approved photo/sticker coordinate system keeps its original size.
+      var television = window.TV_GAMES.mount(page);
+      window.PAGE.destroy = television.suspend;
     },
     renderLang: function () {}
   };
